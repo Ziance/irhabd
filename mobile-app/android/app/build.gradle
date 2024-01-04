@@ -76,7 +76,7 @@ android {
 
     namespace "com.irhabdmobile"
     defaultConfig {
-        applicationId "com.irhabdmobile"
+        applicationId "autolite.irhabd"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
