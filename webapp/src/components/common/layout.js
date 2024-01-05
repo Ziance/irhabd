@@ -12,6 +12,7 @@ const Layout = ({ children }) => {
 
   const handleLogout = () => {
     dispatch(logoutUser());
+    localStorage.removeItem('user');
     navigate("/login");
   };
 

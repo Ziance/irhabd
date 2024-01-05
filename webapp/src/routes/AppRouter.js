@@ -6,14 +6,12 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectUser } from "../redux/slices/userSlice";
 import Login from "../pages/login";
 import MapView from "../pages/mapView";
 import Layout from "../components/common/layout";
-const PrivateRoute = ({ path, element }) => {
-  const user = useSelector(selectUser);
-  const isAuthenticated = !!user;
+
+const PrivateRoute = ({ element, isAuthenticated }) => {
+  console.log('isAuthenticated: ', isAuthenticated);
   return isAuthenticated ? (
     <Layout>{element}</Layout>
   ) : (
@@ -22,13 +20,19 @@ const PrivateRoute = ({ path, element }) => {
 };
 
 const AppRouter = () => {
+  const isAuthenticated = !!localStorage.getItem("user");
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route
           path="/"
-          element={<PrivateRoute path="/" element={<MapView />} />}
+          element={
+            <PrivateRoute
+              element={<MapView />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
         />
       </Routes>
     </Router>

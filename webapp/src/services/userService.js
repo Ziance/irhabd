@@ -14,7 +14,9 @@ export const login = async (credentials) => {
     };
 
     const response = await axios.post(`${BASE_URL}${USER_LOGIN}`, data, config);
-    return response.data;
+    const user = response.data;
+    localStorage.setItem('user', JSON.stringify(user));
+    return user;
   } catch (error) {
     console.log("Error in login : ", error);
   }
