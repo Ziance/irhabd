@@ -8,10 +8,10 @@ import {
 } from "react-router-dom";
 import Login from "../pages/login";
 import MapView from "../pages/mapView";
+import CompatibilityPage from "../pages/compatibilityPage";
 import Layout from "../components/common/layout";
 
 const PrivateRoute = ({ element, isAuthenticated }) => {
-  console.log('isAuthenticated: ', isAuthenticated);
   return isAuthenticated ? (
     <Layout>{element}</Layout>
   ) : (
@@ -30,6 +30,15 @@ const AppRouter = () => {
           element={
             <PrivateRoute
               element={<MapView />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
+        />
+        <Route
+          path="/compatibilityPage"
+          element={
+            <PrivateRoute
+              element={<CompatibilityPage />}
               isAuthenticated={isAuthenticated}
             />
           }

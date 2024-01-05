@@ -8,10 +8,10 @@ const Sidebar = () => {
       <nav>
         <ul>
           <li>
-            <Link to="/map">Map View</Link>
+            <Link to="/">Map View</Link>
           </li>
           <li>
-            <Link to="/about">About</Link>
+            <Link to="/compatibilityPage">Compatibility Page</Link>
           </li>
         </ul>
       </nav>
