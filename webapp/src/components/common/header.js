@@ -5,7 +5,7 @@ import { Container } from "reactstrap";
 const Header = (props) => {
   const {user, currentScreenTitle} = props;
   return (
-    <div className="main-content">
+    <div className="main-contentview">
       <nav
         id="navbar-main"
         className="navbar-top navbar-dark navbar bg-gradient-info"
@@ -16,7 +16,7 @@ const Header = (props) => {
             className="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block"
             href="/"
           >
-           {currentScreenTitle}
+           {currentScreenTitle ?? ''}
           </a>
           <ul className="align-items-center d-none d-md-flex navbar-nav">
             <li className="dropdown nav-item">

@@ -47,9 +47,6 @@ const MapWrapper = () => {
 const MapView = () => {
   const dispatch = useDispatch();
   const location = useSelector(selectLocation);
-  const [zones, setZones] = useState([]);
-  const [divisions, setDivisions] = useState([]);
-  const [stations, setStations] = useState([]);
   const [selectedZone, setSelectedZone] = useState(null);
   const [selectedDivision, setSelectedDivision] = useState(null);
   const [selectedStation, setSelectedStation] = useState(null);
@@ -60,50 +57,9 @@ const MapView = () => {
     dispatch(fetchStations());
   }, []);
 
-  useEffect(() => {
-    if (location?.zones?.length > 0) {
-      setZones(
-        location.zones.map((z) => {
-          return {
-            value: z.code,
-            label: z.name,
-          };
-        })
-      );
-    }
-  }, [location.zones]);
-
-  useEffect(() => {
-    if (location?.divisions?.length > 0) {
-      setDivisions(
-        location.divisions.map((d) => {
-          return {
-            value: d.code,
-            label: d.name,
-          };
-        })
-      );
-    }
-  }, [location.divisions]);
-
-  useEffect(() => {
-    if (location?.stations?.length > 0) {
-      const stationOptions = location.stations.map((s) => {
-        return {
-          value: s.station_code,
-          label: s.station_name,
-        };
-      });
-      console.log("=======stations==============", stationOptions);
-      // setStations(stationOptions);
-    }
-  }, [location.stations]);
-
-  console.log("======================", stations);
-
   return (
     <div className="main-contentview">
-      <div className="header bg-gradient-info pb-8 pt-5 pt-md-8">
+      <div className="header bg-gradient-info pb-8 pt-5 pt-md-4">
         <div className="container-fluid">
           <div className="header-body">
             <div className="row">
@@ -111,18 +67,20 @@ const MapView = () => {
                 <div className="card-stats mb-4 mb-xl-0 card">
                   <CardBody className="card-body">
                     <p className="mt-3 mb-0 text-muted text-sm">Zone</p>
-                    {/* <Input
-                      type="select"
-                      id="zoneSelect"
-                      // onChange={(e) => setSelectedZone(e.target.value)}
-                    >
-                      {location?.zones?.length > 0 &&
-                        location.zones.map((zone) => (
-                          <option key={zone.code} value={zone.code}>
-                            {zone.name}
-                          </option>
-                        ))}
-                    </Input> */}
+                    <InputGroup className="input-group-alternative mb-3">
+                      <select
+                        id="zoneSelect"
+                        onChange={(e) => setSelectedZone(e.target.value)}
+                        className="custom-select"
+                      >
+                        {location?.zones?.length > 0 &&
+                          location.zones.map((zone) => (
+                            <option key={zone.code} value={zone.code}>
+                              {zone.name}
+                            </option>
+                          ))}
+                      </select>
+                    </InputGroup>
                   </CardBody>
                 </div>
               </div>
@@ -130,18 +88,20 @@ const MapView = () => {
                 <div className="card-stats mb-4 mb-xl-0 card">
                   <div className="card-body">
                     <p className="mt-3 mb-0 text-muted text-sm">Divisions</p>
-                    {/* <Input
-                      type="select"
-                      id="divisionSelect"
-                      // onChange={(e) => setSelectedDivision(e.target.value)}
-                    >
-                      {location?.divisions?.length > 0 &&
-                        location.divisions.map((division) => (
-                          <option key={division.code} value={division.code}>
-                            {division.name}
-                          </option>
-                        ))}
-                    </Input> */}
+                    <InputGroup className="input-group-alternative mb-3">
+                      <select
+                        id="divisionsSelect"
+                        onChange={(e) => setSelectedDivision(e.target.value)}
+                        className="custom-select"
+                      >
+                        {location?.divisions?.length > 0 &&
+                          location.divisions.map((division) => (
+                            <option key={division.code} value={division.code}>
+                              {division.name}
+                            </option>
+                          ))}
+                      </select>
+                    </InputGroup>
                   </div>
                 </div>
               </div>
@@ -150,21 +110,11 @@ const MapView = () => {
                   <CardBody className="card-body">
                     <p className="mt-3 mb-0 text-muted text-sm">Stations</p>
                     <FormGroup>
-                      <FormGroup>
-                        <InputGroup className="input-group-alternative mb-3">
-                          {stations.length > 0 && (
-                            <Select
-                              // onChange={setSelectedStation}
-                              options={stations}
-                            />
-                          )}
-                        </InputGroup>
-                      </FormGroup>
-                      {/* <InputGroup className="input-group-alternative mb-3">
-                        <Input
-                          type="select"
+                      <InputGroup className="input-group-alternative mb-3">
+                        <select
                           id="stationSelect"
-                          onChange={(e) => handleStationChange(e.target.value)}
+                          onChange={(e) => setSelectedStation(e.target.value)}
+                          className="custom-select"
                         >
                           {location?.stations?.length > 0 &&
                             location.stations.map((station) => (
@@ -175,8 +125,8 @@ const MapView = () => {
                                 {station.station_name}
                               </option>
                             ))}
-                        </Input>
-                      </InputGroup> */}
+                        </select>
+                      </InputGroup>
                     </FormGroup>
                   </CardBody>
                 </div>

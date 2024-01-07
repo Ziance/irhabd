@@ -41360,6 +41360,31 @@ input, button, select, optgroup, textarea {
   .table .badge i {
     margin-right: 10px;
   }
+
+.custom-select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.custom-select:focus {
+    border-color: #007bff;
+}
+
+.main-content.login {
+  background-color: #172b4d;
+}
+.nav-link {
+  cursor: pointer;
+}
+
+.main-content.login {
+  min-height: 100vh;
+}
   
   /*# sourceMappingURL=argon-dashboard-react.css.map */
   

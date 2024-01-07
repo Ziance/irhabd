@@ -1,7 +1,18 @@
 // Sidebar.js
 import React from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../../redux/slices/userSlice";
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
   return (
     <aside>
       <nav
@@ -177,17 +188,15 @@ const Sidebar = () => {
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="/compatibilityPage">
-                  <i className="ni ni-tv-2 text-primary"></i>Compatibility Screen
+                  <i className="ni ni-tv-2 text-primary"></i>Compatibility
+                  Screen
                 </a>
               </li>
             </ul>
-            
+
             <ul className="mb-md-3 navbar-nav">
               <li className="active-pro active nav-item">
-                <a
-                  className="nav-link"
-                  onClick={() => localStorage.removeItem('user')}
-                >
+                <a className="nav-link" onClick={() => handleLogout()}>
                   <i className="ni ni-user-run"></i>Logout
                 </a>
               </li>

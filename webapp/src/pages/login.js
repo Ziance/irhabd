@@ -14,7 +14,6 @@ import {
   FormGroup,
   Form,
   Input,
-  // InputGroupAddon,
   InputGroupText,
   InputGroup,
 } from "reactstrap";
@@ -39,22 +38,19 @@ const Login = () => {
 
   return (
     <>
-      <div className="main-content" ref={mainContent}>
-        <div className="header bg-gradient-info py-7 py-lg-8">
+      <div className="main-content login" ref={mainContent}>
+        <div className="header bg-gradient-info py-7 py-lg-6">
           <Container>
             <div className="header-body text-center mb-7">
               <Row className="justify-content-center row">
                 <Col lg="5" md="6">
                   <h1 className="text-white">Welcome!</h1>
-                  <p className="text-lead text-light">Login Here</p>
+                  <p className="text-lead text-light">Sign in Here</p>
                 </Col>
               </Row>
             </div>
           </Container>
           <div className="separator separator-bottom separator-skew zindex-100">
-            <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" version="1.1" viewBox="0 0 2560 100" x="0" y="0"><polygon className="fill-default" points="2560 0 2560 100 0 100"></polygon></svg>
-          </div>
-          {/* <div className="separator separator-bottom separator-skew zindex-100">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               preserveAspectRatio="none"
@@ -66,11 +62,10 @@ const Login = () => {
               <polygon
                 className="fill-default"
                 points="2560 0 2560 100 0 100"
-              />
+              ></polygon>
             </svg>
-          </div> */}
+          </div>
         </div>
-        {/* Page content */}
 
         <Container className="mt--8 pb-5">
           <Row className="justify-content-center">
@@ -84,23 +79,19 @@ const Login = () => {
                           <InputGroupText>
                             <i className="ni ni-email-83" />
                           </InputGroupText>
-                        {/* </InputGroupAddon> */}
                         </div>
                         <Input
                           placeholder="Username"
                           type="text"
-                          // autoComplete="new-email"
                           onChange={(e) => setUsername(e.target.value)}
                         />
                       </InputGroup>
                     </FormGroup>
                     <FormGroup>
                       <InputGroup className="input-group-alternative">
-                        {/* <InputGroupAddon addonType="prepend"> */}
-                          <InputGroupText>
-                            <i className="ni ni-lock-circle-open" />
-                          </InputGroupText>
-                        {/* </InputGroupAddon> */}
+                        <InputGroupText>
+                          <i className="ni ni-lock-circle-open" />
+                        </InputGroupText>
                         <Input
                           placeholder="Password"
                           type="password"
@@ -123,7 +114,12 @@ const Login = () => {
                       </label>
                     </div>
                     <div className="text-center">
-                      <Button className="my-4" color="primary" type="button" onClick={handleLogin}>
+                      <Button
+                        className="my-4"
+                        color="primary"
+                        type="button"
+                        onClick={handleLogin}
+                      >
                         Sign in
                       </Button>
                     </div>
