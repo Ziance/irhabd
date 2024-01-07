@@ -1,35 +1,34 @@
 // Layout.js
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { logoutUser, selectUser } from "../../redux/slices/userSlice";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/slices/userSlice";
 import Sidebar from "./sidebar";
+import Header from "./header";
+import Footer from "./footer";
 
-const Layout = ({ children }) => {
+const Layout = (props) => {
+  const {children} = props;
   const user = useSelector(selectUser);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    dispatch(logoutUser());
-    localStorage.removeItem('user');
-    navigate("/login");
-  };
-
+  const route = window.location.pathname;
+  let title = '';
+    switch (route) {
+      case '/':
+        title = 'Map View';
+        break;
+      case '/compatibilityPage':
+        title = 'Compatibilty Page';
+        break;
+      default:
+        title = 'Map View';
+    }
   return (
     <>
       {user ? (
         <>
-          <header>
-            <h1>Welcome, {user ? user.username : "Guest"}!</h1>
-          </header>
+          <Header user={user} currentScreenTitle={title} />
           <Sidebar />
           <main>{children}</main>
-          <footer>
-            <button type="button" onClick={handleLogout}>
-              Logout
-            </button>
-          </footer>
+          <Footer />
         </>
       ) : (
         <></>

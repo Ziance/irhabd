@@ -1,112 +1,58 @@
 // MapView.js
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, CardBody, Container, Row, Col, Input, Label } from "reactstrap";
+import {
+  Card,
+  CardBody,
+  Container,
+  Row,
+  Input,
+  Col,
+  FormGroup,
+  InputGroup,
+} from "reactstrap";
 import {
   fetchZones,
   fetchDivisions,
   fetchStations,
   selectLocation,
 } from "../redux/slices/locationSlice";
+import GoogleMapReact from "google-map-react";
+import Select from "react-select";
+
+const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 const MapWrapper = () => {
-  const mapRef = useRef(null);
-
-  useEffect(() => {
-    if (window.google && mapRef.current) {
-      let map = mapRef.current;
-      let lat = "40.748817";
-      let lng = "-73.985428";
-      const myLatlng = new window.google.maps.LatLng(lat, lng);
-      const mapOptions = {
-        zoom: 12,
-        center: myLatlng,
-        scrollwheel: false,
-        zoomControl: true,
-        styles: [
-          {
-            featureType: "administrative",
-            elementType: "labels.text.fill",
-            stylers: [{ color: "#444444" }],
-          },
-          {
-            featureType: "landscape",
-            elementType: "all",
-            stylers: [{ color: "#f2f2f2" }],
-          },
-          {
-            featureType: "poi",
-            elementType: "all",
-            stylers: [{ visibility: "off" }],
-          },
-          {
-            featureType: "road",
-            elementType: "all",
-            stylers: [{ saturation: -100 }, { lightness: 45 }],
-          },
-          {
-            featureType: "road.highway",
-            elementType: "all",
-            stylers: [{ visibility: "simplified" }],
-          },
-          {
-            featureType: "road.arterial",
-            elementType: "labels.icon",
-            stylers: [{ visibility: "off" }],
-          },
-          {
-            featureType: "transit",
-            elementType: "all",
-            stylers: [{ visibility: "off" }],
-          },
-          {
-            featureType: "water",
-            elementType: "all",
-            stylers: [{ color: "#5e72e4" }, { visibility: "on" }],
-          },
-        ],
-      };
-
-      map = new window.google.maps.Map(map, mapOptions);
-
-      const marker = new window.google.maps.Marker({
-        position: myLatlng,
-        map: map,
-        animation: window.google.maps.Animation.DROP,
-        title: "Light Bootstrap Dashboard PRO React!",
-      });
-
-      const contentString =
-        '<div class="info-window-content"><h2>Light Bootstrap Dashboard PRO React</h2>' +
-        "<p>A premium Admin for React-Bootstrap, Bootstrap, React, and React Hooks.</p></div>";
-
-      const infowindow = new window.google.maps.InfoWindow({
-        content: contentString,
-      });
-
-      window.google.maps.event.addListener(marker, "click", function () {
-        infowindow.open(map, marker);
-      });
-    } else {
-      console.error("Google Maps API not available.");
-    }
-  }, [window.google, mapRef.current]);
+  const defaultProps = {
+    center: {
+      lat: 10.99835602,
+      lng: 77.01502627,
+    },
+    zoom: 11,
+  };
 
   return (
-    <>
-      <div
-        style={{ height: `600px` }}
-        className="map-canvas"
-        id="map-canvas"
-        ref={mapRef}
-      ></div>
-    </>
+    <div style={{ height: "600px", width: "100%" }}>
+      <GoogleMapReact
+        bootstrapURLKeys={{ key: "" }}
+        defaultCenter={defaultProps.center}
+        defaultZoom={defaultProps.zoom}
+      >
+        <AnyReactComponent lat={59.955413} lng={30.337844} text="My Marker" />
+      </GoogleMapReact>
+    </div>
   );
 };
 
 const MapView = () => {
   const dispatch = useDispatch();
   const location = useSelector(selectLocation);
+  const [zones, setZones] = useState([]);
+  const [divisions, setDivisions] = useState([]);
+  const [stations, setStations] = useState([]);
+  const [selectedZone, setSelectedZone] = useState(null);
+  const [selectedDivision, setSelectedDivision] = useState(null);
+  const [selectedStation, setSelectedStation] = useState(null);
 
   useEffect(() => {
     dispatch(fetchZones());
@@ -114,84 +60,136 @@ const MapView = () => {
     dispatch(fetchStations());
   }, []);
 
-  const handleZoneChange = (selectedZone) => {
-    // handle change
-  };
+  useEffect(() => {
+    if (location?.zones?.length > 0) {
+      setZones(
+        location.zones.map((z) => {
+          return {
+            value: z.code,
+            label: z.name,
+          };
+        })
+      );
+    }
+  }, [location.zones]);
 
-  const handleDivisionChange = (selectedZone) => {
-    // handle change
-  };
+  useEffect(() => {
+    if (location?.divisions?.length > 0) {
+      setDivisions(
+        location.divisions.map((d) => {
+          return {
+            value: d.code,
+            label: d.name,
+          };
+        })
+      );
+    }
+  }, [location.divisions]);
 
-  const handleStationChange = (selectedZone) => {
-    // handle change
-  };
+  useEffect(() => {
+    if (location?.stations?.length > 0) {
+      const stationOptions = location.stations.map((s) => {
+        return {
+          value: s.station_code,
+          label: s.station_name,
+        };
+      });
+      console.log("=======stations==============", stationOptions);
+      // setStations(stationOptions);
+    }
+  }, [location.stations]);
+
+  console.log("======================", stations);
 
   return (
-    <div>
-      <h2>Map View Screen</h2>
-      <br />
-
-      {/* Select Zone */}
-      <Label for="zoneSelect">Select Zone:</Label>
-      <Input
-        type="select"
-        id="zoneSelect"
-        onChange={(e) => handleZoneChange(e.target.value)}
-      >
-        {location?.zones?.length > 0 &&
-          location.zones.map((zone) => (
-            <option key={zone.code} value={zone.code}>
-              {zone.name}
-            </option>
-          ))}
-      </Input>
-
-      {/* Select Divisions */}
-      <Label for="divisionSelect">Select Divisions:</Label>
-      <Input
-        type="select"
-        id="divisionSelect"
-        onChange={(e) => handleDivisionChange(e.target.value)}
-      >
-        {location?.divisions?.length > 0 &&
-          location.divisions.map((division) => (
-            <option key={division.code} value={division.code}>
-              {division.name}
-            </option>
-          ))}
-      </Input>
-
-      {/* Select Stations */}
-      <Label for="stationSelect">Select Stations:</Label>
-      <Input
-        type="select"
-        id="stationSelect"
-        onChange={(e) => handleStationChange(e.target.value)}
-      >
-        {location?.stations?.length > 0 &&
-          location.stations.map((station) => (
-            <option key={station.station_code} value={station.station_code}>
-              {station.station_name}
-            </option>
-          ))}
-      </Input>
-
-      {/* Map Section */}
-      <Container className="mt-4">
+    <div className="main-contentview">
+      <div className="header bg-gradient-info pb-8 pt-5 pt-md-8">
+        <div className="container-fluid">
+          <div className="header-body">
+            <div className="row">
+              <div className="col-lg-6 col-xl-3">
+                <div className="card-stats mb-4 mb-xl-0 card">
+                  <CardBody className="card-body">
+                    <p className="mt-3 mb-0 text-muted text-sm">Zone</p>
+                    {/* <Input
+                      type="select"
+                      id="zoneSelect"
+                      // onChange={(e) => setSelectedZone(e.target.value)}
+                    >
+                      {location?.zones?.length > 0 &&
+                        location.zones.map((zone) => (
+                          <option key={zone.code} value={zone.code}>
+                            {zone.name}
+                          </option>
+                        ))}
+                    </Input> */}
+                  </CardBody>
+                </div>
+              </div>
+              <div className="col-lg-6 col-xl-3">
+                <div className="card-stats mb-4 mb-xl-0 card">
+                  <div className="card-body">
+                    <p className="mt-3 mb-0 text-muted text-sm">Divisions</p>
+                    {/* <Input
+                      type="select"
+                      id="divisionSelect"
+                      // onChange={(e) => setSelectedDivision(e.target.value)}
+                    >
+                      {location?.divisions?.length > 0 &&
+                        location.divisions.map((division) => (
+                          <option key={division.code} value={division.code}>
+                            {division.name}
+                          </option>
+                        ))}
+                    </Input> */}
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-6 col-xl-3">
+                <div className="card-stats mb-4 mb-xl-0 card">
+                  <CardBody className="card-body">
+                    <p className="mt-3 mb-0 text-muted text-sm">Stations</p>
+                    <FormGroup>
+                      <FormGroup>
+                        <InputGroup className="input-group-alternative mb-3">
+                          {stations.length > 0 && (
+                            <Select
+                              // onChange={setSelectedStation}
+                              options={stations}
+                            />
+                          )}
+                        </InputGroup>
+                      </FormGroup>
+                      {/* <InputGroup className="input-group-alternative mb-3">
+                        <Input
+                          type="select"
+                          id="stationSelect"
+                          onChange={(e) => handleStationChange(e.target.value)}
+                        >
+                          {location?.stations?.length > 0 &&
+                            location.stations.map((station) => (
+                              <option
+                                key={station.station_code}
+                                value={station.station_code}
+                              >
+                                {station.station_name}
+                              </option>
+                            ))}
+                        </Input>
+                      </InputGroup> */}
+                    </FormGroup>
+                  </CardBody>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Container className="mt--7" fluid>
         <Row>
           <Col>
             <Card className="shadow border-0">
-              <CardBody>
-                <Container className="mt--7" fluid>
-                  <Row>
-                    <div className="col">
-                      <Card className="shadow border-0">
-                        <MapWrapper />
-                      </Card>
-                    </div>
-                  </Row>
-                </Container>
-              </CardBody>
+              <MapWrapper />
             </Card>
           </Col>
         </Row>
