@@ -1,5 +1,5 @@
 // Login.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../redux/slices/userSlice";
@@ -25,12 +25,19 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  useEffect(() => {
+    const isAuthenticated = !!localStorage.getItem("user");
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [navigate]);
+
   const handleLogin = async () => {
     try {
       const credentials = { username, password };
       const user = await login(credentials);
       dispatch(loginUser(user));
-      navigate("/");
+      await navigate("/");
     } catch (error) {
       console.error("Login failed", error);
     }
@@ -100,7 +107,7 @@ const Login = () => {
                         />
                       </InputGroup>
                     </FormGroup>
-                    <div className="custom-control custom-control-alternative custom-checkbox">
+                    {/* <div className="custom-control custom-control-alternative custom-checkbox">
                       <input
                         className="custom-control-input"
                         id=" customCheckLogin"
@@ -112,7 +119,7 @@ const Login = () => {
                       >
                         <span className="text-muted">Remember me</span>
                       </label>
-                    </div>
+                    </div> */}
                     <div className="text-center">
                       <Button
                         className="my-4"
