@@ -24,6 +24,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const isAuthenticated = !!localStorage.getItem("user");
@@ -33,6 +34,18 @@ const Login = () => {
   }, [navigate]);
 
   const handleLogin = async () => {
+    const validationErrors = {};
+    if (!username.trim()) validationErrors.username = "Username is required";
+
+    if (!password.trim()) validationErrors.password = "Password is required";
+
+    // If there are validation errors, update the state and return
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setErrors({});
     try {
       const credentials = { username, password };
       const user = await login(credentials);
@@ -42,6 +55,19 @@ const Login = () => {
       console.error("Login failed", error);
     }
   };
+
+  const handleInputChange = (key, value) => {
+    setErrors({})
+    if(key === 'username') {
+      setUsername(value);
+    }
+
+    if(key === 'password') {
+      setPassword(value)
+    }
+  }
+
+  const isInvalid = (field) => errors[field] && errors[field].length > 0;
 
   return (
     <>
@@ -90,8 +116,12 @@ const Login = () => {
                         <Input
                           placeholder="Username"
                           type="text"
-                          onChange={(e) => setUsername(e.target.value)}
+                          onChange={(e) => handleInputChange('username', e.target.value)}
+                          invalid={isInvalid("username")}
                         />
+                        <div className="invalid-feedback">
+                          {errors.username}
+                        </div>
                       </InputGroup>
                     </FormGroup>
                     <FormGroup>
@@ -103,23 +133,14 @@ const Login = () => {
                           placeholder="Password"
                           type="password"
                           autoComplete="new-password"
-                          onChange={(e) => setPassword(e.target.value)}
+                          onChange={(e) => handleInputChange('password',e.target.value)}
+                          invalid={isInvalid("password")}
                         />
+                        <div className="invalid-feedback">
+                          {errors.password}
+                        </div>
                       </InputGroup>
                     </FormGroup>
-                    {/* <div className="custom-control custom-control-alternative custom-checkbox">
-                      <input
-                        className="custom-control-input"
-                        id=" customCheckLogin"
-                        type="checkbox"
-                      />
-                      <label
-                        className="custom-control-label"
-                        htmlFor=" customCheckLogin"
-                      >
-                        <span className="text-muted">Remember me</span>
-                      </label>
-                    </div> */}
                     <div className="text-center">
                       <Button
                         className="my-4"

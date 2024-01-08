@@ -1,11 +1,12 @@
 // locationSlice.js
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchAllZones, fetchAllDivisions, fetchAllStations} from '../../services/locationService';
+import { fetchAllZones, fetchAllDivisions, fetchAllStations, fetchAllDevices} from '../../services/locationService';
 
 const initialState = {
   zones: [],
   divisions: [],
   stations: [],
+  devices: [],
 };
 
 export const locationSlice = createSlice({
@@ -21,10 +22,13 @@ export const locationSlice = createSlice({
     getAllStations: (state, action) => {
       state.stations = action.payload;
     },
+    getAllDevices: (state, action) => {
+      state.devices = action.payload;
+    },
   },
 });
 
-export const { getAllZones, getAllDivisions, getAllStations } = locationSlice.actions;
+export const { getAllZones, getAllDivisions, getAllStations, getAllDevices } = locationSlice.actions;
 
 // Thunk actions for fetching data asynchronously
 export const fetchZones = () => async (dispatch) => {
@@ -51,6 +55,15 @@ export const fetchStations = () => async (dispatch) => {
     dispatch(getAllStations(stations));
   } catch (error) {
     console.error('Error fetching stations:', error);
+  }
+};
+
+export const fetchDevices = () => async (dispatch) => {
+  try {
+    const devices = await fetchAllDevices();
+    dispatch(getAllDevices(devices));
+  } catch (error) {
+    console.error('Error fetching zones:', error);
   }
 };
 

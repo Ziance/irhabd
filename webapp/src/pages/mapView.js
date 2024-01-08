@@ -6,7 +6,6 @@ import {
   CardBody,
   Container,
   Row,
-  Input,
   Col,
   FormGroup,
   InputGroup,
@@ -16,9 +15,9 @@ import {
   fetchDivisions,
   fetchStations,
   selectLocation,
+  fetchDevices,
 } from "../redux/slices/locationSlice";
 import GoogleMapReact from "google-map-react";
-import Select from "react-select";
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
@@ -55,6 +54,7 @@ const MapView = () => {
     dispatch(fetchZones());
     dispatch(fetchDivisions());
     dispatch(fetchStations());
+    dispatch(fetchDevices());
   }, []);
 
   return (
