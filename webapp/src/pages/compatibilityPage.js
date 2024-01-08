@@ -11,33 +11,43 @@ import {
   Button,
 } from "reactstrap";
 import Select from "react-select";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectCompatibility,
+  fetchCompatibilityDetails,
+} from "../redux/slices/compatibilitySlice";
 
 const CompatibilityScreen = () => {
   const { t } = useTranslation();
-  const [remainingTime, setRemainingTime] = useState(10);
+  const dispatch = useDispatch();
+  const compatibility = useSelector(selectCompatibility);
+  const [remainingTime, setRemainingTime] = useState(30);
   const [userInput, setUserInput] = useState(null);
   const [currentIframeIndex, setCurrentIframeIndex] = useState(0);
-  const [checkList] = useState([
-    { value: 1, label: "IRNET 1", url: "https://en.wikipedia.org/wiki/India" },
-    {
-      value: 2,
-      label: "IRNET 2",
-      url: "https://en.wikipedia.org/wiki/Dholera",
-    },
-  ]);
-  const [selectedCheckList, setSelectedCheckList] = useState([]);
+  const [selectedCompatibilityList, setSelectedCompatibilityList] = useState(
+    []
+  );
   const [frameList, setFrameList] = useState([
     { value: 0, label: "Device Reading", url: "https://www.wikipedia.org/" },
   ]);
 
   useEffect(() => {
-    if (selectedCheckList.length > 0 && userInput >= 10) {
+    try {
+      dispatch(fetchCompatibilityDetails());
+    } catch (error) {
+      toast.error(error?.response?.data || error?.message || "");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedCompatibilityList.length > 0 && userInput >= 10) {
       const interval = setInterval(() => {
         setRemainingTime((prevTime) => {
           if (prevTime === 1) {
             const nextIndex =
-              (currentIframeIndex + 1) % selectedCheckList.length;
+              (currentIframeIndex + 1) % selectedCompatibilityList.length;
             setCurrentIframeIndex(nextIndex);
             return remainingTime;
           } else {
@@ -48,7 +58,7 @@ const CompatibilityScreen = () => {
 
       return () => clearInterval(interval);
     }
-  }, [currentIframeIndex, selectedCheckList, userInput]);
+  }, [currentIframeIndex, selectedCompatibilityList, userInput]);
 
   const handleInputChange = (e) => {
     const inputValue = parseInt(e.target.value, 10);
@@ -59,7 +69,7 @@ const CompatibilityScreen = () => {
 
   const handleOkayClick = () => {
     const existingValuesSet = new Set(frameList.map((item) => item.value));
-    const uniqueSelectedCheckList = selectedCheckList.filter(
+    const uniqueSelectedCheckList = selectedCompatibilityList.filter(
       (item) => !existingValuesSet.has(item.value)
     );
     setFrameList((prevList) => [...prevList, ...uniqueSelectedCheckList]);
@@ -67,8 +77,19 @@ const CompatibilityScreen = () => {
   };
 
   const handleSelectChange = (selectedOptions) => {
-    setSelectedCheckList(selectedOptions);
+    setSelectedCompatibilityList(selectedOptions);
   };
+
+  let compatibilityList = [];
+  if (compatibility?.compatibility) {
+    compatibilityList = Object.entries(compatibility.compatibility).map(
+      ([key, url]) => ({
+        value: key,
+        label: key,
+        url: url,
+      })
+    );
+  }
 
   return (
     <div className="main-contentview">
@@ -80,14 +101,15 @@ const CompatibilityScreen = () => {
                 <div className="card-stats mb-4 mb-xl-0 card">
                   <CardBody>
                     <p className="mb-0 text-muted text-sm">
-                      {t('setDurationSeconds')}
+                      {t("setDurationSeconds")}
                     </p>
                     <Input
                       type="number"
                       id="durationInput"
                       value={userInput}
                       onChange={handleInputChange}
-                      min={1}
+                      min={10}
+                      max={600}
                     />
                   </CardBody>
                 </div>
@@ -95,11 +117,13 @@ const CompatibilityScreen = () => {
               <div className="col-lg-6 col-xl-3">
                 <div className="card-stats mb-4 mb-xl-0 card">
                   <CardBody>
-                    <p className="mb-0 text-muted text-sm">{t('selectFrame')}</p>
+                    <p className="mb-0 text-muted text-sm">
+                      {t("selectFrame")}
+                    </p>
                     <Select
                       isMulti
-                      options={checkList}
-                      value={selectedCheckList}
+                      options={compatibilityList}
+                      value={selectedCompatibilityList}
                       onChange={handleSelectChange}
                     />
                   </CardBody>
@@ -107,14 +131,14 @@ const CompatibilityScreen = () => {
               </div>
               <div className="col-lg-6 col-xl-3">
                 <Button color="primary" onClick={handleOkayClick}>
-                  {t('okay')}
+                  {t("okay")}
                 </Button>
                 {/* <div style={{ marginTop: "10px" }}>
                   Remaining Time: {remainingTime} seconds / {frameList.length}
                 </div>
 
                 <div style={{ marginTop: "10px" }}>
-                  {selectedCheckList.length}
+                  {selectedCompatibilityList.length}
                 </div> */}
               </div>
             </div>
