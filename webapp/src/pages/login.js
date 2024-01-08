@@ -1,5 +1,5 @@
 // Login.js
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../redux/slices/userSlice";
@@ -17,6 +17,7 @@ import {
   InputGroupText,
   InputGroup,
 } from "reactstrap";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const mainContent = React.useRef(null);
@@ -25,15 +26,19 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const isAuthenticated = !!localStorage.getItem("user");
 
   useEffect(() => {
-    const isAuthenticated = !!localStorage.getItem("user");
-    if (isAuthenticated) {
-      navigate("/");
-    }
-  }, [navigate]);
+    const navigateToScreen = async () => {
+      if (isAuthenticated) {
+        await navigate("/");
+      }
+    };
 
-  const handleLogin = async () => {
+    navigateToScreen();
+  }, [isAuthenticated]);
+
+  const handleLogin = useCallback(async () => {
     const validationErrors = {};
     if (!username.trim()) validationErrors.username = "Username is required";
 
@@ -50,22 +55,23 @@ const Login = () => {
       const credentials = { username, password };
       const user = await login(credentials);
       dispatch(loginUser(user));
-      await navigate("/");
+      navigate("/");
+      toast.success("Logged in successfully.");
     } catch (error) {
-      console.error("Login failed", error);
+      toast.error(error?.response?.data || error?.message || "Login failed");
     }
-  };
+  }, [dispatch, login, navigate, password, toast, username]);
 
   const handleInputChange = (key, value) => {
-    setErrors({})
-    if(key === 'username') {
+    setErrors({});
+    if (key === "username") {
       setUsername(value);
     }
 
-    if(key === 'password') {
-      setPassword(value)
+    if (key === "password") {
+      setPassword(value);
     }
-  }
+  };
 
   const isInvalid = (field) => errors[field] && errors[field].length > 0;
 
@@ -116,7 +122,9 @@ const Login = () => {
                         <Input
                           placeholder="Username"
                           type="text"
-                          onChange={(e) => handleInputChange('username', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("username", e.target.value)
+                          }
                           invalid={isInvalid("username")}
                         />
                         <div className="invalid-feedback">
@@ -133,7 +141,9 @@ const Login = () => {
                           placeholder="Password"
                           type="password"
                           autoComplete="new-password"
-                          onChange={(e) => handleInputChange('password',e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("password", e.target.value)
+                          }
                           invalid={isInvalid("password")}
                         />
                         <div className="invalid-feedback">

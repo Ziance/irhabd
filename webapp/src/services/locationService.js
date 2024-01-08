@@ -19,7 +19,6 @@ export const fetchAllZones = async () => {
       return response.data;
     } else return []
   } catch (error) {
-    console.error("Error in getting zones details:", error);
     throw error;
   }
 };
@@ -36,7 +35,6 @@ export const fetchAllDivisions = async () => {
       return response.data;
     } else return []
   } catch (error) {
-    console.error("Error in getting division details:", error);
     throw error;
   }
 };
@@ -53,7 +51,6 @@ export const fetchAllStations = async () => {
       return response.data;
     } else return []
   } catch (error) {
-    console.error("Error in getting station details:", error);
     throw error;
   }
 };
@@ -70,7 +67,6 @@ export const fetchAllDevices = async () => {
       return response.data;
     } else return []
   } catch (error) {
-    console.error("Error in getting devices:", error);
     throw error;
   }
 };

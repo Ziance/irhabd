@@ -18,6 +18,7 @@ import {
   fetchDevices,
 } from "../redux/slices/locationSlice";
 import GoogleMapReact from "google-map-react";
+import { toast } from 'react-toastify';
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
@@ -51,10 +52,14 @@ const MapView = () => {
   const [selectedStation, setSelectedStation] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchZones());
-    dispatch(fetchDivisions());
-    dispatch(fetchStations());
-    dispatch(fetchDevices());
+    try {
+      dispatch(fetchZones());
+      dispatch(fetchDivisions());
+      dispatch(fetchStations());
+      dispatch(fetchDevices());
+    } catch(error) {
+      toast.error(error?.response?.data || error?.message || 'Data fetch failed.');
+    }
   }, []);
 
   return (
