@@ -1,13 +1,14 @@
 // Sidebar.js
 import React from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { logoutUser } from "../../redux/slices/userSlice";
 import { useTranslation } from 'react-i18next';
 
 const Sidebar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
 
   const handleLogout = () => {
@@ -15,6 +16,11 @@ const Sidebar = () => {
     localStorage.removeItem("user");
     navigate("/login");
   };
+
+  const isLinkActive = (path) => {
+    return location.pathname === path;
+  };
+
   return (
     <aside>
       <nav
@@ -32,12 +38,12 @@ const Sidebar = () => {
           </a>
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav">
-              <li className="nav-item">
-                <a aria-current="page" className="nav-link active" href="/">
+              <li className={`nav-item ${isLinkActive("/") && "active"}`}>
+                <a aria-current="page" className="nav-link" href="/">
                   <i className="ni ni-pin-3 text-orange"></i>{t('mapView')}
                 </a>
               </li>
-              <li className="nav-item">
+              <li className={`nav-item ${isLinkActive("/compatibilityPage") && "active"}`}>
                 <a className="nav-link" href="/compatibilityPage">
                   <i className="ni ni-tv-2 text-primary"></i>{t('compatibilty')}
                 </a>
