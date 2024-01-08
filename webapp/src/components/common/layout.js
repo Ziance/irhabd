@@ -16,7 +16,7 @@ const Layout = (props) => {
         title = 'Map View';
         break;
       case '/compatibilityPage':
-        title = 'Compatibilty Page';
+        title = 'Compatibilty';
         break;
       default:
         title = 'Map View';

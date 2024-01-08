@@ -58,9 +58,9 @@ export const fetchStations = () => async (dispatch) => {
   }
 };
 
-export const fetchDevices = () => async (dispatch) => {
+export const fetchDevices = (paramObj = null) => async (dispatch) => {
   try {
-    const devices = await fetchAllDevices();
+    const devices = await fetchAllDevices(paramObj);
     dispatch(getAllDevices(devices));
   } catch (error) {
     console.error('Error fetching zones:', error);

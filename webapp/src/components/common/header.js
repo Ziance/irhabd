@@ -35,7 +35,7 @@ const Header = (props) => {
                   </span>
                   <div className="ml-2 d-none d-lg-block media text-white">
                     <span className="mb-0 text-sm font-weight-bold">
-                      {user?.name ?? 'Guest'}
+                      {user?.name || user?.email || 'Guest'}
                     </span>
                   </div>
                 </div>

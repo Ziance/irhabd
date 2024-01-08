@@ -1,6 +1,12 @@
 // locationService.js
 import axios from "axios";
-import { BASE_URL, GET_ALL_DIVISIONS, GET_ALL_STATIONS, GET_ALL_ZONES, GET_DEVICES } from "../utils/endpoints";
+import {
+  BASE_URL,
+  GET_ALL_DIVISIONS,
+  GET_ALL_STATIONS,
+  GET_ALL_ZONES,
+  GET_DEVICES,
+} from "../utils/endpoints";
 
 const getToken = () => {
   const userData = localStorage.getItem("user");
@@ -17,7 +23,7 @@ export const fetchAllZones = async () => {
     });
     if (response.status === 200) {
       return response.data;
-    } else return []
+    } else return [];
   } catch (error) {
     throw error;
   }
@@ -33,7 +39,7 @@ export const fetchAllDivisions = async () => {
     });
     if (response.status === 200) {
       return response.data;
-    } else return []
+    } else return [];
   } catch (error) {
     throw error;
   }
@@ -49,23 +55,35 @@ export const fetchAllStations = async () => {
     });
     if (response.status === 200) {
       return response.data;
-    } else return []
+    } else return [];
   } catch (error) {
     throw error;
   }
 };
 
-export const fetchAllDevices = async () => {
+export const fetchAllDevices = async (paramObj = null) => {
   const token = await getToken();
+  let url = `${BASE_URL}${GET_DEVICES}`;
+  if (paramObj) {
+    const queryString = Object.keys(paramObj)
+      .filter((key) => paramObj[key] !== undefined && paramObj[key] !== null)
+      .map((key) => `${key}=${encodeURIComponent(paramObj[key])}`)
+      .join("&");
+
+    if (queryString) {
+      url += `?${queryString}`;
+    }
+  }
+
   try {
-    const response = await axios.get(`${BASE_URL}${GET_DEVICES}`, {
+    const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
     if (response.status === 200) {
       return response.data;
-    } else return []
+    } else return [];
   } catch (error) {
     throw error;
   }

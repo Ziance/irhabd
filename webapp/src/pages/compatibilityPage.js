@@ -56,14 +56,17 @@ const CompatibilityScreen = () => {
   };
 
   const handleOkayClick = () => {
-    const existingValuesSet = new Set(frameList.map(item => item.value));
-    const uniqueSelectedCheckList = selectedCheckList.filter(item => !existingValuesSet.has(item.value));
-    setFrameList(prevList => [...prevList, ...uniqueSelectedCheckList]);
+    const existingValuesSet = new Set(frameList.map((item) => item.value));
+    const uniqueSelectedCheckList = selectedCheckList.filter(
+      (item) => !existingValuesSet.has(item.value)
+    );
+    setFrameList((prevList) => [...prevList, ...uniqueSelectedCheckList]);
     setRemainingTime(userInput);
   };
 
-  const handleSelectChange = (selectedOptions) =>
+  const handleSelectChange = (selectedOptions) => {
     setSelectedCheckList(selectedOptions);
+  };
 
   return (
     <div className="main-contentview">
