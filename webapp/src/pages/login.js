@@ -18,8 +18,10 @@ import {
   InputGroup,
 } from "reactstrap";
 import { toast } from "react-toastify";
+import { useTranslation } from 'react-i18next';
 
 const Login = () => {
+  const { t } = useTranslation();
   const mainContent = React.useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -40,9 +42,9 @@ const Login = () => {
 
   const handleLogin = useCallback(async () => {
     const validationErrors = {};
-    if (!username.trim()) validationErrors.username = "Username is required";
+    if (!username.trim()) validationErrors.username = t('usernameIsRequired');
 
-    if (!password.trim()) validationErrors.password = "Password is required";
+    if (!password.trim()) validationErrors.password = t('passwordIsRequired');
 
     // If there are validation errors, update the state and return
     if (Object.keys(validationErrors).length > 0) {
@@ -58,7 +60,7 @@ const Login = () => {
       navigate("/");
       toast.success("Logged in successfully.");
     } catch (error) {
-      toast.error(error?.response?.data || error?.message || "Login failed");
+      toast.error(error?.response?.data || error?.message || t('loginFailed'));
     }
   }, [dispatch, login, navigate, password, toast, username]);
 
@@ -83,8 +85,8 @@ const Login = () => {
             <div className="header-body text-center mb-7">
               <Row className="justify-content-center row">
                 <Col lg="5" md="6">
-                  <h1 className="text-white">Welcome!</h1>
-                  <p className="text-lead text-light">Sign in Here</p>
+                  <h1 className="text-white">{t('welcome!')}</h1>
+                  <p className="text-lead text-light">{t('signInHere')}</p>
                 </Col>
               </Row>
             </div>
@@ -158,7 +160,7 @@ const Login = () => {
                         type="button"
                         onClick={handleLogin}
                       >
-                        Sign in
+                        {t('signIn')}
                       </Button>
                     </div>
                   </Form>
@@ -171,7 +173,7 @@ const Login = () => {
                     href="#pablo"
                     onClick={(e) => e.preventDefault()}
                   >
-                    <small>Forgot password?</small>
+                    <small>{t('forgotPassword?')}</small>
                   </a>
                 </Col>
               </Row>

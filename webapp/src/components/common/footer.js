@@ -1,7 +1,9 @@
 // Footer.js
 import React from "react";
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
+  const { t } = useTranslation();
   return (
     <footer>
       <div className="main-contentview">
@@ -16,7 +18,7 @@ const Footer = () => {
                     rel="noopener noreferrer"
                     target="_blank"
                   >
-                    IRHBD
+                    {t('IRHBD')}
                   </a>
                 </div>
               </div>

@@ -5,21 +5,23 @@ import { selectUser } from "../../redux/slices/userSlice";
 import Sidebar from "./sidebar";
 import Header from "./header";
 import Footer from "./footer";
+import { useTranslation } from 'react-i18next';
 
 const Layout = (props) => {
   const {children} = props;
+  const { t } = useTranslation();
   const user = useSelector(selectUser);
   const route = window.location.pathname;
   let title = '';
     switch (route) {
       case '/':
-        title = 'Map View';
+        title = t('mapView');
         break;
       case '/compatibilityPage':
-        title = 'Compatibilty';
+        title = t('compatibilty');
         break;
       default:
-        title = 'Map View';
+        title = t('mapView');
     }
   return (
     <>

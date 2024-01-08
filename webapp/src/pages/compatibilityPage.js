@@ -11,8 +11,10 @@ import {
   Button,
 } from "reactstrap";
 import Select from "react-select";
+import { useTranslation } from 'react-i18next';
 
 const CompatibilityScreen = () => {
+  const { t } = useTranslation();
   const [remainingTime, setRemainingTime] = useState(10);
   const [userInput, setUserInput] = useState(null);
   const [currentIframeIndex, setCurrentIframeIndex] = useState(0);
@@ -78,7 +80,7 @@ const CompatibilityScreen = () => {
                 <div className="card-stats mb-4 mb-xl-0 card">
                   <CardBody>
                     <p className="mb-0 text-muted text-sm">
-                      Set Duration (seconds)
+                      {t('setDurationSeconds')}
                     </p>
                     <Input
                       type="number"
@@ -93,7 +95,7 @@ const CompatibilityScreen = () => {
               <div className="col-lg-6 col-xl-3">
                 <div className="card-stats mb-4 mb-xl-0 card">
                   <CardBody>
-                    <p className="mb-0 text-muted text-sm">Select Frame</p>
+                    <p className="mb-0 text-muted text-sm">{t('selectFrame')}</p>
                     <Select
                       isMulti
                       options={checkList}
@@ -105,7 +107,7 @@ const CompatibilityScreen = () => {
               </div>
               <div className="col-lg-6 col-xl-3">
                 <Button color="primary" onClick={handleOkayClick}>
-                  Okay
+                  {t('okay')}
                 </Button>
                 {/* <div style={{ marginTop: "10px" }}>
                   Remaining Time: {remainingTime} seconds / {frameList.length}

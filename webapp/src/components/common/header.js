@@ -1,9 +1,12 @@
 // Header.js
 import React from "react";
 import { Container } from "reactstrap";
+import { useTranslation } from 'react-i18next';
 
 const Header = (props) => {
   const {user, currentScreenTitle} = props;
+  const { t } = useTranslation();
+
   return (
     <div className="main-contentview">
       <nav
@@ -35,7 +38,7 @@ const Header = (props) => {
                   </span>
                   <div className="ml-2 d-none d-lg-block media text-white">
                     <span className="mb-0 text-sm font-weight-bold">
-                      {user?.name || user?.email || 'Guest'}
+                      {user?.name || user?.email || t('guest')}
                     </span>
                   </div>
                 </div>

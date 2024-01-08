@@ -11,9 +11,11 @@ import {
 } from "../../redux/slices/locationSlice";
 import { toast } from "react-toastify";
 import Select from "react-select";
+import { useTranslation } from 'react-i18next';
 
 const LocationDropDown = (props) => {
   const { getSelectedZones, getSelectedDivisions, getSelectedStations } = props;
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const location = useSelector(selectLocation);
   const [selectedZone, setSelectedZone] = useState([]);
@@ -56,7 +58,7 @@ const LocationDropDown = (props) => {
             <div className="col-lg-6 col-xl-3">
               <div className="card-stats mb-4 mb-xl-0 card">
                 <CardBody className="card-body">
-                  <p className="mt-3 mb-0 text-muted text-sm">Zone</p>
+                  <p className="mt-3 mb-0 text-muted text-sm">{t('zone')}</p>
                   <Select
                     isMulti
                     options={(location?.zones ?? []).map((s) => ({
@@ -72,7 +74,7 @@ const LocationDropDown = (props) => {
             <div className="col-lg-6 col-xl-3">
               <div className="card-stats mb-4 mb-xl-0 card">
                 <div className="card-body">
-                  <p className="mt-3 mb-0 text-muted text-sm">Divisions</p>
+                  <p className="mt-3 mb-0 text-muted text-sm">{t('division')}</p>
                   <Select
                     isMulti
                     options={(location?.divisions ?? []).map((s) => ({
@@ -90,7 +92,7 @@ const LocationDropDown = (props) => {
             <div className="col-lg-6 col-xl-3">
               <div className="card-stats mb-4 mb-xl-0 card">
                 <div className="card-body">
-                  <p className="mt-3 mb-0 text-muted text-sm">Stations</p>
+                  <p className="mt-3 mb-0 text-muted text-sm">{t('station')}</p>
                   <Select
                     isMulti
                     options={(location?.stations ?? []).map((s) => ({
