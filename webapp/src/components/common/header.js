@@ -1,10 +1,10 @@
 // Header.js
 import React from "react";
 import { Container } from "reactstrap";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const Header = (props) => {
-  const {user, currentScreenTitle} = props;
+  const { user, currentScreenTitle } = props;
   const { t } = useTranslation();
 
   return (
@@ -17,9 +17,9 @@ const Header = (props) => {
         <Container fluid>
           <a
             className="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block"
-            href="/"
+            href={window.location.pathname}
           >
-           {currentScreenTitle ?? ''}
+            {currentScreenTitle ?? ""}
           </a>
           <ul className="align-items-center d-none d-md-flex navbar-nav">
             <li className="dropdown nav-item">
@@ -38,7 +38,7 @@ const Header = (props) => {
                   </span>
                   <div className="ml-2 d-none d-lg-block media text-white">
                     <span className="mb-0 text-sm font-weight-bold">
-                      {user?.name || user?.email || t('guest')}
+                      {user?.name || user?.email || t("guest")}
                     </span>
                   </div>
                 </div>

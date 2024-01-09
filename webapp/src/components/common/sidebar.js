@@ -43,9 +43,16 @@ const Sidebar = () => {
                   <i className="ni ni-pin-3 text-orange"></i>{t('mapView')}
                 </a>
               </li>
+              
               <li className={`nav-item ${isLinkActive("/compatibilityPage") && "active"}`}>
                 <a className="nav-link" href="/compatibilityPage">
                   <i className="ni ni-tv-2 text-primary"></i>{t('compatibilty')}
+                </a>
+              </li>
+
+              <li className={`nav-item ${isLinkActive("/contactUs") && "active"}`}>
+                <a className="nav-link" href="/contactUs">
+                  <i className="ni ni-headphones text-primary"></i>{t('contactUs')}
                 </a>
               </li>
             </ul>

@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import Login from "../pages/login";
 import MapView from "../pages/mapView";
+import ContactUs from "../pages/contactUs";
 import CompatibilityPage from "../pages/compatibilityPage";
 import Layout from "../components/common/layout";
 
@@ -39,6 +40,15 @@ const AppRouter = () => {
           element={
             <PrivateRoute
               element={<CompatibilityPage />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
+        />
+        <Route
+          path="/contactUs"
+          element={
+            <PrivateRoute
+              element={<ContactUs />}
               isAuthenticated={isAuthenticated}
             />
           }

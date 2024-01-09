@@ -20,6 +20,9 @@ const Layout = (props) => {
       case '/compatibilityPage':
         title = t('compatibilty');
         break;
+      case '/contactUs':
+        title = t('contactUs');
+        break;
       default:
         title = t('mapView');
     }
