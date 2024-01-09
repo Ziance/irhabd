@@ -1,12 +1,13 @@
 // locationSlice.js
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchAllZones, fetchAllDivisions, fetchAllStations, fetchAllDevices} from '../../services/locationService';
+import { fetchAllZones, fetchAllDivisions, fetchAllStations, fetchAllDevices, fetchAllDeviceStatusBulk} from '../../services/locationService';
 
 const initialState = {
   zones: [],
   divisions: [],
   stations: [],
   devices: [],
+  deviceBulkStatus: [],
 };
 
 export const locationSlice = createSlice({
@@ -25,10 +26,13 @@ export const locationSlice = createSlice({
     getAllDevices: (state, action) => {
       state.devices = action.payload;
     },
+    getAllDeviceBulkStatus: (state, action) => {
+      state.devices = action.payload;
+    },
   },
 });
 
-export const { getAllZones, getAllDivisions, getAllStations, getAllDevices } = locationSlice.actions;
+export const { getAllZones, getAllDivisions, getAllStations, getAllDevices, getAllDeviceBulkStatus} = locationSlice.actions;
 
 // Thunk actions for fetching data asynchronously
 export const fetchZones = () => async (dispatch) => {
@@ -63,7 +67,16 @@ export const fetchDevices = (paramObj = null) => async (dispatch) => {
     const devices = await fetchAllDevices(paramObj);
     dispatch(getAllDevices(devices));
   } catch (error) {
-    console.error('Error fetching zones:', error);
+    console.error('Error fetching devices:', error);
+  }
+};
+
+export const fetchDeviceBulkStatus = (paramObj = null) => async (dispatch) => {
+  try {
+    const devices = await fetchAllDeviceStatusBulk(paramObj);
+    dispatch(getAllDeviceBulkStatus(devices));
+  } catch (error) {
+    console.error('Error fetching device bulk status:', error);
   }
 };
 

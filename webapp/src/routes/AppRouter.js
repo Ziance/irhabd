@@ -11,6 +11,8 @@ import MapView from "../pages/mapView";
 import ContactUs from "../pages/contactUs";
 import CompatibilityPage from "../pages/compatibilityPage";
 import Layout from "../components/common/layout";
+import AlertSettings from "../pages/alertSettings";
+import DeviceStatus from "../pages/deviceStatus";
 
 const PrivateRoute = ({ element, isAuthenticated }) => {
   return isAuthenticated ? (
@@ -49,6 +51,24 @@ const AppRouter = () => {
           element={
             <PrivateRoute
               element={<ContactUs />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
+        />
+        <Route
+          path="/alertSettings"
+          element={
+            <PrivateRoute
+              element={<AlertSettings />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
+        />
+        <Route
+          path="/deviceStatus"
+          element={
+            <PrivateRoute
+              element={<DeviceStatus />}
               isAuthenticated={isAuthenticated}
             />
           }

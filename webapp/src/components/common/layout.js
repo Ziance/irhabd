@@ -5,27 +5,33 @@ import { selectUser } from "../../redux/slices/userSlice";
 import Sidebar from "./sidebar";
 import Header from "./header";
 import Footer from "./footer";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const Layout = (props) => {
-  const {children} = props;
+  const { children } = props;
   const { t } = useTranslation();
   const user = useSelector(selectUser);
   const route = window.location.pathname;
-  let title = '';
-    switch (route) {
-      case '/':
-        title = t('mapView');
-        break;
-      case '/compatibilityPage':
-        title = t('compatibilty');
-        break;
-      case '/contactUs':
-        title = t('contactUs');
-        break;
-      default:
-        title = t('mapView');
-    }
+  let title = "";
+  switch (route) {
+    case "/":
+      title = t("mapView");
+      break;
+    case "/compatibilityPage":
+      title = t("compatibilty");
+      break;
+    case "/contactUs":
+      title = t("contactUs");
+      break;
+    case "/alertSettings":
+      title = t("alertSettings");
+      break;
+    case "/deviceStatus":
+      title = t("deviceStatus");
+      break;
+    default:
+      title = t("");
+  }
   return (
     <>
       {user ? (

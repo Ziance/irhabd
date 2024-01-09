@@ -30,5 +30,9 @@
   "email": "Email",
   "websites": "Websites",
   "url": "URL",
-  "pleaseEnterUrl": "Please enter URL"
+  "pleaseEnterUrl": "Please enter URL",
+  "alertSettings": "Alert Settings",
+  "deviceStatus": "Device Status",
+  "devices": "Devices",
+  "records": "Records"
 }
