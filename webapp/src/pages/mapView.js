@@ -12,7 +12,6 @@ import Marker from "./marker";
 const MapWrapper = ({ data }) => {
   const [infoWindow, setInfoWindow] = useState(null);
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
-  const [yourGoogleMapInstance, setYourGoogleMapInstance] = useState(null);
 
   const [zoom] = useState(3);
 
@@ -34,23 +33,6 @@ const MapWrapper = ({ data }) => {
     }
   }, [data]);
 
-  // useEffect(() => {
-  //   if (infoWindow) {
-  //     // Calculate the position for the InfoWindow
-  //     console.log('===================', infoWindow)
-  //     const infoWindowPosition = {
-  //       lat: infoWindow?.latitude,
-  //       lng: infoWindow?.longitude,
-  //     };
-
-  //     // Set the calculated position in state
-  //     setInfoWindow((prevInfoWindow) => ({
-  //       ...prevInfoWindow,
-  //       position: infoWindowPosition,
-  //     }));
-  //   }
-  // }, [infoWindow]);
-
   const handleMarkerClick = (marker) => {
     setInfoWindow(marker);
   };
@@ -69,7 +51,6 @@ const MapWrapper = ({ data }) => {
         defaultZoom={zoom}
         onClick={handleMapClick}
         yesIWantToUseGoogleMapApiInternals={true}
-        onGoogleApiLoaded={({ map }) => setYourGoogleMapInstance(map)}
       >
         {data.map((marker) => (
           <Marker

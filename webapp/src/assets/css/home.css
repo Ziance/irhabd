@@ -41414,6 +41414,10 @@ input, button, select, optgroup, textarea {
   color: #888;
   outline: none;
 }
+
+.contact-us-card {
+  min-height: 485px;
+}
   
   /*# sourceMappingURL=argon-dashboard-react.css.map */
   

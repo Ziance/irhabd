@@ -25,6 +25,7 @@ const CompatibilityScreen = () => {
   const compatibility = useSelector(selectCompatibility);
   const [remainingTime, setRemainingTime] = useState(30);
   const [userInput, setUserInput] = useState(null);
+  const [urlInput, setUrlInput] = useState(null);
   const [currentIframeIndex, setCurrentIframeIndex] = useState(0);
   const [selectedCompatibilityList, setSelectedCompatibilityList] = useState(
     []
@@ -32,6 +33,7 @@ const CompatibilityScreen = () => {
   const [frameList, setFrameList] = useState([
     { value: 0, label: "Device Reading", url: "https://www.wikipedia.org/" },
   ]);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     try {
@@ -60,11 +62,14 @@ const CompatibilityScreen = () => {
     }
   }, [currentIframeIndex, selectedCompatibilityList, userInput]);
 
-  const handleInputChange = (e) => {
-    const inputValue = parseInt(e.target.value, 10);
-
-    if (!isNaN(inputValue) && inputValue >= 1) setUserInput(inputValue);
-    else setUserInput(0);
+  const handleInputChange = (e, isForURL = false) => {
+    if (!isForURL) {
+      const inputValue = parseInt(e.target.value, 10);
+      if (!isNaN(inputValue) && inputValue >= 10) setUserInput(inputValue);
+      else setUserInput(0);
+    } else {
+      setUrlInput(e.target.value);
+    }
   };
 
   const handleOkayClick = () => {
@@ -74,6 +79,23 @@ const CompatibilityScreen = () => {
     );
     setFrameList((prevList) => [...prevList, ...uniqueSelectedCheckList]);
     setRemainingTime(userInput);
+    if (isIqnetSelected) {
+      if (urlInput === null || urlInput === "") {
+        const validationErrors = {};
+        validationErrors.url = t("pleaseEnterUrl");
+        setErrors(validationErrors);
+        return;
+      } else {
+        setErrors({});
+        let newList = frameList;
+        newList = newList.map((option) =>
+          option?.value.toString().toLowerCase() === "iqnet"
+            ? { ...option, url: option.url.replace("$", urlInput) }
+            : option
+        );
+        setFrameList(newList);
+      }
+    }
   };
 
   const handleSelectChange = (selectedOptions) => {
@@ -90,6 +112,13 @@ const CompatibilityScreen = () => {
       })
     );
   }
+  const isIqnetSelected = selectedCompatibilityList.some(
+    (option) => option?.value.toLowerCase() === "iqnet"
+  );
+
+  console.log("=====================", frameList);
+  console.log("==========errors===========", errors);
+  const isInvalid = (field) => errors[field] && errors[field].length > 0;
 
   return (
     <div className="main-contentview">
@@ -129,6 +158,23 @@ const CompatibilityScreen = () => {
                   </CardBody>
                 </div>
               </div>
+              {isIqnetSelected && (
+                <div className="col-lg-6 col-xl-3">
+                  <div className="card-stats mb-4 mb-xl-0 card">
+                    <CardBody>
+                      <p className="mb-0 text-muted text-sm">{t("url")}</p>
+                      <Input
+                        type="text"
+                        id="urlInput"
+                        value={urlInput}
+                        onChange={(e) => handleInputChange(e, true)}
+                        invalid={isInvalid("url")}
+                      />
+                      <div className="invalid-feedback">{errors.url}</div>
+                    </CardBody>
+                  </div>
+                </div>
+              )}
               <div className="col-lg-6 col-xl-3">
                 <Button color="primary" onClick={handleOkayClick}>
                   {t("okay")}

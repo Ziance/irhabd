@@ -23,5 +23,12 @@
   "mapView": "Map View",
   "compatibilty": "Compatibilty",
   "logout": "Logout", 
-  "contactUs": "Contact Us"
+  "contactUs": "Contact Us",
+  "letsConnect": "Let's Connect",
+  "contactNumber": "Contact Number",
+  "address": "Address",
+  "email": "Email",
+  "websites": "Websites",
+  "url": "URL",
+  "pleaseEnterUrl": "Please enter URL"
 }
