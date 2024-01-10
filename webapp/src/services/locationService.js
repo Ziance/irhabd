@@ -89,6 +89,7 @@ export const fetchAllDevices = async (paramObj = null) => {
     throw error;
   }
 };
+
 export const fetchAllDeviceStatusBulk = async (paramObj = null) => {
   const token = await getToken();
   let url = `${BASE_URL}${GET_DEVICE_STATUS_BULK}`;

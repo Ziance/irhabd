@@ -116,8 +116,6 @@ const CompatibilityScreen = () => {
     (option) => option?.value.toLowerCase() === "iqnet"
   );
 
-  console.log("=====================", frameList);
-  console.log("==========errors===========", errors);
   const isInvalid = (field) => errors[field] && errors[field].length > 0;
 
   return (

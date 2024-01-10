@@ -14,7 +14,6 @@ export const login = async (credentials) => {
     };
 
     const response = await axios.post(`${BASE_URL}${USER_LOGIN}`, data, config);
-    console.log('===================', response)
     const user = response.data;
     localStorage.setItem('user', JSON.stringify(user));
     return user;

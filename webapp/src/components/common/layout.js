@@ -29,6 +29,9 @@ const Layout = (props) => {
     case "/deviceStatus":
       title = t("deviceStatus");
       break;
+    case "/deviceReadings":
+      title = t("deviceReadings");
+      break;
     default:
       title = t("");
   }

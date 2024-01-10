@@ -13,6 +13,7 @@ import CompatibilityPage from "../pages/compatibilityPage";
 import Layout from "../components/common/layout";
 import AlertSettings from "../pages/alertSettings";
 import DeviceStatus from "../pages/deviceStatus";
+import DeviceReadings from "../pages/deviceReadings";
 
 const PrivateRoute = ({ element, isAuthenticated }) => {
   return isAuthenticated ? (
@@ -60,6 +61,15 @@ const AppRouter = () => {
           element={
             <PrivateRoute
               element={<AlertSettings />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
+        />
+         <Route
+          path="/deviceReadings"
+          element={
+            <PrivateRoute
+              element={<DeviceReadings />}
               isAuthenticated={isAuthenticated}
             />
           }

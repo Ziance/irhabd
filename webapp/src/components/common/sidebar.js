@@ -65,6 +65,11 @@ const Sidebar = () => {
                   <i className="ni ni-app text-primary"></i>{t('deviceStatus')}
                 </a>
               </li>
+              <li className={`nav-item ${isLinkActive("/deviceReadings") && "active"}`}>
+                <a className="nav-link" href="/deviceReadings">
+                  <i className="ni ni-app text-primary"></i>{t('deviceReadings')}
+                </a>
+              </li>
             </ul>
 
             <ul className="mb-md-3 navbar-nav">

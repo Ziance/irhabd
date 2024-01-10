@@ -5,5 +5,7 @@ export const GET_ALL_DIVISIONS="/v1/area/divisions";
 export const GET_ALL_STATIONS="/v1/area/stations";
 export const GET_DEVICES="/v1/devices";
 export const GET_DEVICE_READINGS = "/v1/device-readings";
+export const GET_COACH_BY_DEVICE_READINGS = "/v1/coach-by-device-readings";
+export const GET_AXLE_BY_COACH = "/v1/axle-by-coach";
 export const GET_COMPATIBILITY = "/v1/compatiblity";
 export const GET_DEVICE_STATUS_BULK = "/v1/device-status-bulk";
