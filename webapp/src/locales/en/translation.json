@@ -53,5 +53,9 @@
   "remark": "Remark",
   "trainNo": "Train No",
   "prev": "Prev",
-  "next": "Next"
+  "next": "Next",
+  "name": "Name",
+  "position": "Position",
+  "coaches": "Coaches",
+  "type": "Type"
 }
