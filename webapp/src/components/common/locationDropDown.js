@@ -27,7 +27,6 @@ const LocationDropDown = (props) => {
       dispatch(fetchZones());
       dispatch(fetchDivisions());
       dispatch(fetchStations());
-      dispatch(fetchDevices());
     } catch (error) {
       toast.error(
         error?.response?.data || error?.message || "Data fetch failed."
@@ -80,7 +79,7 @@ const LocationDropDown = (props) => {
                   <Select
                     isMulti
                     options={(location?.divisions ?? []).map((s) => ({
-                      value: s.code,
+                      value: s.id,
                       label: s.name,
                     }))}
                     value={selectedDivision}
@@ -99,7 +98,7 @@ const LocationDropDown = (props) => {
                     isMulti
                     options={(location?.stations ?? []).map((s) => ({
                       value: s.station_code,
-                      label: s.station_name,
+                      label: s.station_name
                     }))}
                     value={selectedStation}
                     onChange={(options) =>

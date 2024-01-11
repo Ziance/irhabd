@@ -12,7 +12,6 @@ import Marker from "./marker";
 const MapWrapper = ({ data }) => {
   const [infoWindow, setInfoWindow] = useState(null);
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
-
   const [zoom] = useState(3);
 
   useEffect(() => {
@@ -76,20 +75,37 @@ const MapWrapper = ({ data }) => {
 const MapView = () => {
   const dispatch = useDispatch();
   const location = useSelector(selectLocation);
+  const [selectedZones, setSelectedZones] = useState([]);
+  const [selectedDivisions, setSelectedDivisions] = useState([]);
+  const [selectedStations, setSelectedStations] = useState([]);
 
   useEffect(() => {
+    let paramObj = {};
+    if (selectedZones.length > 0)
+      paramObj.zone = selectedZones.map((item) => item.value).join(",");
+
+    if (selectedDivisions.length > 0)
+      paramObj.division = selectedDivisions.map((item) => item.value).join(",");
+
+    if (selectedStations.length > 0)
+      paramObj.station = selectedStations.map((item) => item.value).join(",");
+
     try {
-      dispatch(fetchDevices());
+      paramObj ? dispatch(fetchDevices(paramObj)) : dispatch(fetchDevices());
     } catch (error) {
       toast.error(
         error?.response?.data || error?.message || "Data fetch failed."
       );
     }
-  }, []);
+  }, [selectedZones, selectedDivisions, selectedStations]);
 
   return (
     <div className="main-contentview">
-      <LocationDropDown />
+      <LocationDropDown
+        getSelectedZones={(options) => setSelectedZones(options)}
+        getSelectedDivisions={(options) => setSelectedDivisions(options)}
+        getSelectedStations={(options) => setSelectedStations(options)}
+      />
       <Container className="mt--7" fluid>
         <Row>
           <Col>
