@@ -1,7 +1,7 @@
 // DeviceReadings.js
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Card, CardBody, Col, Container, Row } from "reactstrap";
+import { Button, Card, CardBody, Col, Container, Row, Modal } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -11,6 +11,7 @@ import {
 import { toast } from "react-toastify";
 import DeviceReadingTable from "./deviceReadingTable";
 import PaginationComponent from "./paginationComponent";
+import DeviceReadingModal from "./deviceReadingModal";
 
 const DeviceReadings = ({ showFromLeft }) => {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ const DeviceReadings = ({ showFromLeft }) => {
   const navigate = useNavigate();
   const [paginatedDataSetting, setPaginatedDataSettings] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [filterModalOpen, setFilterModalOpen] = useState(false);
   const isAuthenticated = !!localStorage.getItem("user");
 
   useEffect(() => {
@@ -39,6 +41,26 @@ const DeviceReadings = ({ showFromLeft }) => {
       );
     }
   }, []);
+
+  useEffect(() => {
+    if (showFromLeft) {
+      setLoading(true);
+      try {
+        dispatch(
+          fetchDeviceReadings({
+            is_test: false,
+            hot_axle: false,
+          })
+        );
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        toast.error(
+          error?.response?.data || error?.message || "Data fetch failed."
+        );
+      }
+    }
+  }, [showFromLeft]);
 
   useEffect(() => {
     const navigateToScreen = async () => {
@@ -118,6 +140,8 @@ const DeviceReadings = ({ showFromLeft }) => {
 
     return groupedByStation[stationName].slice(startIndex, endIndex);
   });
+
+  const closeFilterModal = () => setFilterModalOpen(false);
 
   return (
     <div
@@ -201,6 +225,10 @@ const DeviceReadings = ({ showFromLeft }) => {
           </Col>
         </Row>
       </Container>
+      <DeviceReadingModal
+        open={filterModalOpen}
+        closeModal={closeFilterModal}
+      />
     </div>
   );
 };

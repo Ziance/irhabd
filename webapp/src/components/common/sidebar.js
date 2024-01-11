@@ -55,16 +55,16 @@ const Sidebar = () => {
                   <i className="ni ni-mobile-button text-primary"></i>{t('contactUs')}
                 </a>
               </li>
-              <li className={`nav-item ${isLinkActive("/alertSettings") && "active"}`}>
+              {/* <li className={`nav-item ${isLinkActive("/alertSettings") && "active"}`}>
                 <a className="nav-link" href="/alertSettings">
                   <i className="ni ni-settings-gear-65 text-primary"></i>{t('alertSettings')}
                 </a>
-              </li>
-              <li className={`nav-item ${isLinkActive("/deviceStatus") && "active"}`}>
+              </li> */}
+              {/* <li className={`nav-item ${isLinkActive("/deviceStatus") && "active"}`}>
                 <a className="nav-link" href="/deviceStatus">
                   <i className="ni ni-app text-primary"></i>{t('deviceStatus')}
                 </a>
-              </li>
+              </li> */}
               <li className={`nav-item ${isLinkActive("/deviceReadings") && "active"}`}>
                 <a className="nav-link" href="/deviceReadings">
                   <i className="ni ni-app text-primary"></i>{t('deviceReadings')}

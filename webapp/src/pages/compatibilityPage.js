@@ -24,7 +24,7 @@ const CompatibilityScreen = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const compatibility = useSelector(selectCompatibility);
-  const [remainingTime, setRemainingTime] = useState(30);
+  const [remainingTime, setRemainingTime] = useState(10);
   const [userInput, setUserInput] = useState(null);
   const [urlInput, setUrlInput] = useState(null);
   const [currentIframeIndex, setCurrentIframeIndex] = useState(0);
@@ -35,6 +35,9 @@ const CompatibilityScreen = () => {
     { value: 0, label: "Device Reading", isShowDeviceReading: true },
   ]);
   const [errors, setErrors] = useState({});
+  const [isIqnetSelected, setIsIqnetSelected] = useState(false);
+  const [isOkayClicked, setIsOkayClicked] = useState(false);
+  const [compatibilityList, setCompatibilityList] = useState([]);
 
   useEffect(() => {
     try {
@@ -45,12 +48,23 @@ const CompatibilityScreen = () => {
   }, []);
 
   useEffect(() => {
+    if (compatibility?.compatibility) {
+      let list = [];
+      list = Object.entries(compatibility.compatibility).map(([key, url]) => ({
+        value: key,
+        label: key,
+        url: url,
+      }));
+      setCompatibilityList(list);
+    }
+  }, [compatibility?.compatibility]);
+
+  useEffect(() => {
     if (selectedCompatibilityList.length > 0 && userInput >= 10) {
       const interval = setInterval(() => {
         setRemainingTime((prevTime) => {
           if (prevTime === 1) {
-            const nextIndex =
-              (currentIframeIndex + 1) % selectedCompatibilityList.length;
+            const nextIndex = (currentIframeIndex + 1) % frameList.length;
             setCurrentIframeIndex(nextIndex);
             return remainingTime;
           } else {
@@ -58,10 +72,39 @@ const CompatibilityScreen = () => {
           }
         });
       }, 1000);
-
       return () => clearInterval(interval);
     }
-  }, [currentIframeIndex, selectedCompatibilityList, userInput]);
+  }, [selectedCompatibilityList, userInput, remainingTime]);
+
+  const handleOkayClick = () => {
+    setRemainingTime(userInput);
+    if (isIqnetSelected) {
+      if (urlInput === null || urlInput === "") {
+        const validationErrors = {};
+        validationErrors.url = t("pleaseEnterUrl");
+        setErrors(validationErrors);
+        return;
+      } else {
+        setErrors({});
+        let newList = selectedCompatibilityList;
+        newList = newList.map((option) =>
+          option?.value.toString().toLowerCase() === "iqnet"
+            ? { ...option, url: option.url.replace("$", urlInput) }
+            : option
+        );
+        setFrameList([
+          { value: 0, label: "Device Reading", isShowDeviceReading: true },
+          ...newList,
+        ]);
+      }
+    } else {
+      setFrameList([
+        { value: 0, label: "Device Reading", isShowDeviceReading: true },
+        ...selectedCompatibilityList,
+      ]);
+    }
+    setIsOkayClicked(true);
+  };
 
   const handleInputChange = (e, isForURL = false) => {
     if (!isForURL) {
@@ -73,52 +116,15 @@ const CompatibilityScreen = () => {
     }
   };
 
-  const handleOkayClick = () => {
-    const existingValuesSet = new Set(frameList.map((item) => item.value));
-    const uniqueSelectedCheckList = selectedCompatibilityList.filter(
-      (item) => !existingValuesSet.has(item.value)
-    );
-    setFrameList((prevList) => [...prevList, ...uniqueSelectedCheckList]);
-    setRemainingTime(userInput);
-    if (isIqnetSelected) {
-      if (urlInput === null || urlInput === "") {
-        const validationErrors = {};
-        validationErrors.url = t("pleaseEnterUrl");
-        setErrors(validationErrors);
-        return;
-      } else {
-        setErrors({});
-        let newList = frameList;
-        newList = newList.map((option) =>
-          option?.value.toString().toLowerCase() === "iqnet"
-            ? { ...option, url: option.url.replace("$", urlInput) }
-            : option
-        );
-        setFrameList(newList);
-      }
-    }
-  };
-
   const handleSelectChange = (selectedOptions) => {
     setSelectedCompatibilityList(selectedOptions);
+    const isIqnet = selectedOptions.some(
+      (option) => option?.value.toLowerCase() === "iqnet"
+    );
+    setIsIqnetSelected(isIqnet);
   };
 
-  let compatibilityList = [];
-  if (compatibility?.compatibility) {
-    compatibilityList = Object.entries(compatibility.compatibility).map(
-      ([key, url]) => ({
-        value: key,
-        label: key,
-        url: url,
-      })
-    );
-  }
-  const isIqnetSelected = selectedCompatibilityList.some(
-    (option) => option?.value.toLowerCase() === "iqnet"
-  );
-
-  const isInvalid = (field) => errors[field] && errors[field].length > 0;
-
+  console.log("===============", frameList);
   return (
     <div className="main-contentview">
       <div className="header bg-gradient-info pb-8 pt-5 pt-md-4">
@@ -134,6 +140,7 @@ const CompatibilityScreen = () => {
                     <Input
                       type="number"
                       id="durationInput"
+                      defaultValue={10}
                       value={userInput}
                       onChange={handleInputChange}
                       min={10}
@@ -167,7 +174,7 @@ const CompatibilityScreen = () => {
                         id="urlInput"
                         value={urlInput}
                         onChange={(e) => handleInputChange(e, true)}
-                        invalid={isInvalid("url")}
+                        invalid={errors["url"] && errors["url"].length > 0}
                       />
                       <div className="invalid-feedback">{errors.url}</div>
                     </CardBody>
@@ -178,13 +185,9 @@ const CompatibilityScreen = () => {
                 <Button color="primary" onClick={handleOkayClick}>
                   {t("okay")}
                 </Button>
-                {/* <div style={{ marginTop: "10px" }}>
-                  Remaining Time: {remainingTime} seconds / {frameList.length}
-                </div>
-
                 <div style={{ marginTop: "10px" }}>
-                  {selectedCompatibilityList.length}
-                </div> */}
+                  Remaining Time: {remainingTime} seconds
+                </div>
               </div>
             </div>
           </div>
@@ -193,6 +196,7 @@ const CompatibilityScreen = () => {
       <Container className="mt--7 " fluid>
         <Row>
           {frameList.map((item, index) => {
+            console.log("currentIframeIndex", currentIframeIndex);
             return (
               <Col sm="12" key={item.id}>
                 <Card
@@ -207,7 +211,7 @@ const CompatibilityScreen = () => {
                         title={`iframe-${item.id}`}
                         src={item.url}
                         width="100%"
-                        height="400px"
+                        height="500px"
                       ></iframe>
                     )) || (
                       <div
