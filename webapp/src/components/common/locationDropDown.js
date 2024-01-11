@@ -11,7 +11,7 @@ import {
 } from "../../redux/slices/locationSlice";
 import { toast } from "react-toastify";
 import Select from "react-select";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const LocationDropDown = (props) => {
   const { getSelectedZones, getSelectedDivisions, getSelectedStations } = props;
@@ -42,11 +42,11 @@ const LocationDropDown = (props) => {
     }
     if (key === "division") {
       setSelectedDivision(options);
-      getSelectedDivisions && getSelectedDivisions(options)
+      getSelectedDivisions && getSelectedDivisions(options);
     }
     if (key === "station") {
       setSelectedStation(options);
-      getSelectedStations && getSelectedStations(options)
+      getSelectedStations && getSelectedStations(options);
     }
   };
 
@@ -58,7 +58,7 @@ const LocationDropDown = (props) => {
             <div className="col-lg-6 col-xl-3">
               <div className="card-stats mb-4 mb-xl-0 card">
                 <CardBody className="card-body">
-                  <p className="mt-3 mb-0 text-muted text-sm">{t('zone')}</p>
+                  <p className="mt-3 mb-0 text-muted text-sm">{t("zone")}</p>
                   <Select
                     isMulti
                     options={(location?.zones ?? []).map((s) => ({
@@ -73,8 +73,10 @@ const LocationDropDown = (props) => {
             </div>
             <div className="col-lg-6 col-xl-3">
               <div className="card-stats mb-4 mb-xl-0 card">
-                <div className="card-body">
-                  <p className="mt-3 mb-0 text-muted text-sm">{t('division')}</p>
+                <CardBody className="card-body">
+                  <p className="mt-3 mb-0 text-muted text-sm">
+                    {t("division")}
+                  </p>
                   <Select
                     isMulti
                     options={(location?.divisions ?? []).map((s) => ({
@@ -86,13 +88,13 @@ const LocationDropDown = (props) => {
                       handleSelectChange("division", options)
                     }
                   />
-                </div>
+                </CardBody>
               </div>
             </div>
             <div className="col-lg-6 col-xl-3">
               <div className="card-stats mb-4 mb-xl-0 card">
                 <div className="card-body">
-                  <p className="mt-3 mb-0 text-muted text-sm">{t('station')}</p>
+                  <p className="mt-3 mb-0 text-muted text-sm">{t("station")}</p>
                   <Select
                     isMulti
                     options={(location?.stations ?? []).map((s) => ({

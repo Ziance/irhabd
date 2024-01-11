@@ -12,22 +12,28 @@ import { toast } from "react-toastify";
 import DeviceReadingTable from "./deviceReadingTable";
 import PaginationComponent from "./paginationComponent";
 
-const DeviceReadings = () => {
+const DeviceReadings = ({ showFromLeft }) => {
   const dispatch = useDispatch();
   const selectorData = useSelector(selectDeviceReadings);
   const { t } = useTranslation();
   const mainContent = React.useRef(null);
   const navigate = useNavigate();
   const [paginatedDataSetting, setPaginatedDataSettings] = useState(null);
+  const [loading, setLoading] = useState(false);
   const isAuthenticated = !!localStorage.getItem("user");
 
   useEffect(() => {
+    setLoading(true);
     try {
-      dispatch(fetchDeviceReadings({
-        is_test: false,
-        hot_axle: false
-      }));
+      dispatch(
+        fetchDeviceReadings({
+          is_test: false,
+          hot_axle: false,
+        })
+      );
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       toast.error(
         error?.response?.data || error?.message || "Data fetch failed."
       );
@@ -69,7 +75,15 @@ const DeviceReadings = () => {
       setPaginatedDataSettings((prevState) => ({
         ...prevState,
         [stationName]: {
-          rowsPerPage: e.target.value,
+          rowsPerPage: parseInt(e.target.value, 10),
+          currentPage: 1,
+        },
+      }));
+    } else {
+      setPaginatedDataSettings((prevState) => ({
+        ...prevState,
+        [stationName]: {
+          rowsPerPage: 5,
           currentPage: 1,
         },
       }));
@@ -106,7 +120,10 @@ const DeviceReadings = () => {
   });
 
   return (
-    <div className="main-contentview" ref={mainContent}>
+    <div
+      className={`${(showFromLeft && "main-content") || "main-contentview"}`}
+      ref={mainContent}
+    >
       <div className="header bg-gradient-info pb-8 pt-5 pt-md-4">
         <div className="container-fluid">
           <div className="header-body">
@@ -143,37 +160,42 @@ const DeviceReadings = () => {
           <Col>
             <Card className="shadow border-0 ">
               <CardBody>
-                {Object.keys(groupedByStation)?.length > 0 &&
-                  paginatedData &&
-                  paginatedData.map((station) => {
-                    const { rowsPerPage, currentPage } = getPaginationDetails(
-                      station[0]?.station
-                    );
-                    return (
-                      <>
-                        <div
-                          key={station?.id}
-                          className="device-reading-table-container"
-                          style={{
-                            marginBottom: "20px",
-                            border: "1px solid #ccc",
-                            borderRadius: "10px",
-                            overflow: "auto",
-                          }}
-                        >
-                          <DeviceReadingTable station={station} />
-                        </div>
-                        <PaginationComponent
-                          station={station}
-                          groupedByStation={groupedByStation}
-                          currentPage={currentPage}
-                          rowsPerPage={rowsPerPage}
-                          handlePageChange={handlePageChange}
-                          handleRowsPerPageChange={handleRowsPerPageChange}
-                        />
-                      </>
-                    );
-                  })}
+                {loading ? (
+                  <div className="text-center text-muted">Loading...</div>
+                ) : (
+                  <>
+                    {Object.keys(groupedByStation)?.length > 0 &&
+                      paginatedData &&
+                      paginatedData.map((station) => {
+                        const { rowsPerPage, currentPage } =
+                          getPaginationDetails(station[0]?.station);
+                        return (
+                          <>
+                            <div
+                              key={station?.id}
+                              className="device-reading-table-container"
+                              style={{
+                                marginBottom: "20px",
+                                border: "1px solid #ccc",
+                                borderRadius: "10px",
+                                overflow: "auto",
+                              }}
+                            >
+                              <DeviceReadingTable station={station} />
+                            </div>
+                            <PaginationComponent
+                              station={station}
+                              groupedByStation={groupedByStation}
+                              currentPage={currentPage}
+                              rowsPerPage={rowsPerPage}
+                              handlePageChange={handlePageChange}
+                              handleRowsPerPageChange={handleRowsPerPageChange}
+                            />
+                          </>
+                        );
+                      })}
+                  </>
+                )}
               </CardBody>
             </Card>
           </Col>

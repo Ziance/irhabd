@@ -18,6 +18,7 @@ import {
   selectCompatibility,
   fetchCompatibilityDetails,
 } from "../redux/slices/compatibilitySlice";
+import DeviceReadings from "./deviceReadings";
 
 const CompatibilityScreen = () => {
   const { t } = useTranslation();
@@ -31,7 +32,7 @@ const CompatibilityScreen = () => {
     []
   );
   const [frameList, setFrameList] = useState([
-    { value: 0, label: "Device Reading", url: "https://www.wikipedia.org/" },
+    { value: 0, label: "Device Reading", isShowDeviceReading: true },
   ]);
   const [errors, setErrors] = useState({});
 
@@ -201,12 +202,23 @@ const CompatibilityScreen = () => {
                 >
                   <CardBody>
                     <CardTitle tag="h5">{item.label}</CardTitle>
-                    <iframe
-                      title={`iframe-${item.id}`}
-                      src={item.url}
-                      width="100%"
-                      height="400px"
-                    ></iframe>
+                    {(item?.url && (
+                      <iframe
+                        title={`iframe-${item.id}`}
+                        src={item.url}
+                        width="100%"
+                        height="400px"
+                      ></iframe>
+                    )) || (
+                      <div
+                        className="container-fluid overflow-auto"
+                        style={{
+                          height: "500px",
+                        }}
+                      >
+                        <DeviceReadings showFromLeft={true} />
+                      </div>
+                    )}
                   </CardBody>
                 </Card>
               </Col>

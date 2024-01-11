@@ -12,8 +12,8 @@ import {
 import { toast } from "react-toastify";
 
 const AxleTable = (props) => {
-  const { data } = props;
   const { t } = useTranslation();
+  const selectorData = useSelector(selectDeviceReadings);
 
   return (
     <Table striped>
@@ -42,8 +42,8 @@ const AxleTable = (props) => {
         </tr>
       </thead>
       <tbody>
-        {data &&
-          data.map((rowData) => (
+        {selectorData?.axleByCoashData &&
+          selectorData?.axleByCoashData.map((rowData) => (
             <tr key={rowData.id}>
               <td>{rowData.axle_index_coach ?? ""}</td>
               <td>
@@ -66,8 +66,7 @@ const AxleTable = (props) => {
   );
 };
 
-const CoachTable = (props) => {
-  const { data } = props;
+const CoachTable = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const selectorData = useSelector(selectDeviceReadings);
@@ -118,8 +117,8 @@ const CoachTable = (props) => {
         </tr>
       </thead>
       <tbody>
-        {data &&
-          data.map((rowData) => (
+        {selectorData?.coachByDeviceData &&
+          selectorData?.coachByDeviceData.map((rowData) => (
             <>
               <tr key={rowData.id}>
                 <td>
@@ -128,7 +127,8 @@ const CoachTable = (props) => {
                       isAxleDataShow && selectedCoachRow.id === rowData.id
                         ? "down"
                         : "right"
-                    } text-primary cursor-pointer`}
+                    } text-primary`}
+                    style={{ cursor: "pointer" }}
                     onClick={() => handleCoachIconClick(rowData)}
                   ></i>
                 </td>
@@ -145,13 +145,16 @@ const CoachTable = (props) => {
                 <td>{rowData.avg_speed ?? ""}</td>
                 <td>{rowData.remarks ?? ""}</td>
               </tr>
-              {isAxleDataShow &&
-                selectedCoachRow.id === rowData.id &&
-                selectorData?.axleByCoashData?.length > 0 && (
-                  <div className="p-4">
-                    <AxleTable data={selectorData?.axleByCoashData} />
-                  </div>
-                )}
+              {isAxleDataShow && selectedCoachRow.id === rowData.id && (
+                <tr className="p-4">
+                  <td colSpan="12">
+                    {(selectorData?.axleByCoashData?.length > 0 && (
+                      <AxleTable />
+                    )) ||
+                      "No rows found"}
+                  </td>
+                </tr>
+              )}
             </>
           ))}
       </tbody>
@@ -220,11 +223,12 @@ const DeviceReadingTable = (props) => {
               <tr key={rowData.id}>
                 <td>
                   <i
-                    className={`ni ni-bold-${
+                    className={`text-primary ni ni-bold-${
                       isCoachDataShow && selectedRow.id === rowData.id
                         ? "down"
                         : "right"
-                    } text-primary cursor-pointer`}
+                    }`}
+                    style={{ cursor: "pointer" }}
                     onClick={() => handleIconClick(rowData)}
                   ></i>
                 </td>
@@ -245,13 +249,16 @@ const DeviceReadingTable = (props) => {
                 <td>{rowData.remarks ?? ""}</td>
                 <td>{rowData.train_no ?? ""}</td>
               </tr>
-              {isCoachDataShow &&
-                selectedRow.id === rowData.id &&
-                selectorData?.coachByDeviceData?.length > 0 && (
-                  <div className="p-4">
-                    <CoachTable />
-                  </div>
-                )}
+              {isCoachDataShow && selectedRow.id === rowData.id && (
+                <tr className="p-4">
+                  <td colSpan="12">
+                    {(selectorData?.coachByDeviceData?.length > 0 && (
+                      <CoachTable />
+                    )) ||
+                      "No rows found"}
+                  </td>
+                </tr>
+              )}
             </>
           ))}
       </tbody>
