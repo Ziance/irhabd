@@ -13,6 +13,21 @@ const MapView = () => {
   const [selectedZones, setSelectedZones] = useState([]);
   const [selectedDivisions, setSelectedDivisions] = useState([]);
   const [selectedStations, setSelectedStations] = useState([]);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDnrrB6Nu2FFFrM6eO-oQXFu_Y9yHp2cL4&libraries=places';
+    script.async = true;
+    script.onload = () => {
+      console.log('Google Maps API loaded');
+      setIsMapLoaded(true); 
+    };
+    document.head.appendChild(script);
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, [])
 
   useEffect(() => {
     let paramObj = {};
@@ -45,7 +60,7 @@ const MapView = () => {
         <Row>
           <Col>
             <Card className="shadow border-0">
-              {(location?.devices?.length > 0 && (
+              {(isMapLoaded && location?.devices?.length > 0 && (
                 <MapWrapper
                   data={location.devices
                     .filter((marker) => marker.latitude && marker.longitude)
