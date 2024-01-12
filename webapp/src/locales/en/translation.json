@@ -57,5 +57,7 @@
   "name": "Name",
   "position": "Position",
   "coaches": "Coaches",
-  "type": "Type"
+  "type": "Type",
+  "locationType": "Location Type",
+  "location": "Location"
 }

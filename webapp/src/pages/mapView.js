@@ -10,35 +10,29 @@ import MapWrapper from "./mapWrapper";
 const MapView = () => {
   const dispatch = useDispatch();
   const location = useSelector(selectLocation);
-  const [selectedZones, setSelectedZones] = useState([]);
-  const [selectedDivisions, setSelectedDivisions] = useState([]);
-  const [selectedStations, setSelectedStations] = useState([]);
+  const [selectedType, setSelectedType] = useState(null);
+  const [selectedData, setSelectedData] = useState([]);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
 
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDnrrB6Nu2FFFrM6eO-oQXFu_Y9yHp2cL4&libraries=places';
+    const script = document.createElement("script");
+    script.src =
+      "https://maps.googleapis.com/maps/api/js?key=AIzaSyDnrrB6Nu2FFFrM6eO-oQXFu_Y9yHp2cL4&libraries=places";
     script.async = true;
     script.onload = () => {
-      console.log('Google Maps API loaded');
-      setIsMapLoaded(true); 
+      console.log("Google Maps API loaded");
+      setIsMapLoaded(true);
     };
     document.head.appendChild(script);
     return () => {
       document.head.removeChild(script);
     };
-  }, [])
+  }, []);
 
   useEffect(() => {
     let paramObj = {};
-    if (selectedZones.length > 0)
-      paramObj.zone = selectedZones.map((item) => item.value).join(",");
-
-    if (selectedDivisions.length > 0)
-      paramObj.division = selectedDivisions.map((item) => item.value).join(",");
-
-    if (selectedStations.length > 0)
-      paramObj.station = selectedStations.map((item) => item.value).join(",");
+    if (selectedData.length > 0)
+      paramObj[selectedType] = selectedData.map((item) => item.value).join(",");
 
     try {
       paramObj ? dispatch(fetchDevices(paramObj)) : dispatch(fetchDevices());
@@ -47,14 +41,13 @@ const MapView = () => {
         error?.response?.data || error?.message || "Data fetch failed."
       );
     }
-  }, [selectedZones, selectedDivisions, selectedStations]);
+  }, [selectedData]);
 
   return (
     <div className="main-contentview">
       <LocationDropDown
-        getSelectedZones={(options) => setSelectedZones(options)}
-        getSelectedDivisions={(options) => setSelectedDivisions(options)}
-        getSelectedStations={(options) => setSelectedStations(options)}
+        getSelectedData={(options) => setSelectedData(options)}
+        getSelectedKey={(key) => setSelectedType(key)}
       />
       <Container className="mt--7" fluid>
         <Row>

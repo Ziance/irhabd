@@ -163,17 +163,6 @@ const Login = () => {
                   </Form>
                 </CardBody>
               </Card>
-              <Row className="mt-3">
-                <Col xs="6">
-                  <a
-                    className="text-light"
-                    href="#pablo"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    <small>{t("forgotPassword?")}</small>
-                  </a>
-                </Col>
-              </Row>
             </Col>
           </Row>
         </Container>

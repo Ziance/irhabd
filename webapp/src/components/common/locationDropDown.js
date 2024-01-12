@@ -7,46 +7,88 @@ import {
   fetchDivisions,
   fetchStations,
   selectLocation,
-  fetchDevices,
 } from "../../redux/slices/locationSlice";
 import { toast } from "react-toastify";
 import Select from "react-select";
 import { useTranslation } from "react-i18next";
 
+const LOCATION_TYPES = [
+  {
+    value: "zones",
+    label: "Zone",
+  },
+  {
+    value: "divisions",
+    label: "Division",
+  },
+  {
+    value: "stations",
+    label: "Station",
+  },
+];
+
 const LocationDropDown = (props) => {
-  const { getSelectedZones, getSelectedDivisions, getSelectedStations } = props;
+  const { getSelectedData, getSelectedKey } = props;
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const location = useSelector(selectLocation);
-  const [selectedZone, setSelectedZone] = useState([]);
-  const [selectedDivision, setSelectedDivision] = useState([]);
-  const [selectedStation, setSelectedStation] = useState([]);
+  const [selectedType, setSelectedType] = useState({});
+  const [selectedTypeData, setSelectedTypeData] = useState([]);
+  const [optionList, setOptionList] = useState([]);
 
   useEffect(() => {
-    try {
-      dispatch(fetchZones());
-      dispatch(fetchDivisions());
-      dispatch(fetchStations());
-    } catch (error) {
-      toast.error(
-        error?.response?.data || error?.message || "Data fetch failed."
-      );
+    if (selectedType) {
+      try {
+        switch (selectedType.value) {
+          case "zones":
+            dispatch(fetchZones());
+            break;
+          case "divisions":
+            dispatch(fetchDivisions());
+            break;
+          case "stations":
+            dispatch(fetchStations());
+            break;
+          default:
+            console.log("Api call");
+            break;
+        }
+      } catch (error) {
+        toast.error(
+          error?.response?.data || error?.message || "Data fetch failed."
+        );
+      }
     }
-  }, []);
+  }, [selectedType]);
 
-  const handleSelectChange = (key, options) => {
-    if (key === "zones") {
-      setSelectedZone(options);
-      getSelectedZones && getSelectedZones(options);
+  useEffect(() => {
+    let data = [];
+    if (selectedType.value === "zones" && location?.zones?.length > 0) {
+      data = location.zones.map((s) => ({
+        value: s.code,
+        label: s.name,
+      }));
     }
-    if (key === "division") {
-      setSelectedDivision(options);
-      getSelectedDivisions && getSelectedDivisions(options);
+    if (selectedType.value === "divisions" && location?.divisions?.length > 0) {
+      data = location.divisions.map((s) => ({
+        value: s.id,
+        label: s.name,
+      }));
     }
-    if (key === "station") {
-      setSelectedStation(options);
-      getSelectedStations && getSelectedStations(options);
+    if (selectedType.value === "stations" && location?.stations?.length > 0) {
+      data = location.stations.map((s) => ({
+        value: s.station_code,
+        label: s.station_name,
+      }));
     }
+
+    setOptionList(data);
+  }, [location, selectedType]);
+
+  const handleSelectChange = (options) => {
+    setSelectedTypeData(options);
+    getSelectedData && getSelectedData(options);
+    getSelectedKey && getSelectedKey(selectedType.value);
   };
 
   return (
@@ -55,57 +97,34 @@ const LocationDropDown = (props) => {
         <div className="header-body">
           <div className="row">
             <div className="col-lg-6 col-xl-3">
-              <div className="card-stats mb-4 mb-xl-0 card">
-                <CardBody className="card-body">
-                  <p className="mt-3 mb-0 text-muted text-sm">{t("zone")}</p>
+              <div className="card-stats card">
+                <CardBody>
+                  <p className="text-muted text-sm">
+                    {t("locationType")}
+                  </p>
                   <Select
-                    isMulti
-                    options={(location?.zones ?? []).map((s) => ({
-                      value: s.code,
-                      label: s.name,
-                    }))}
-                    value={selectedZone}
-                    onChange={(options) => handleSelectChange("zones", options)}
+                    isMulti={false}
+                    options={LOCATION_TYPES}
+                    value={selectedType}
+                    onChange={(option) => setSelectedType(option)}
                   />
                 </CardBody>
               </div>
             </div>
+
             <div className="col-lg-6 col-xl-3">
-              <div className="card-stats mb-4 mb-xl-0 card">
+              <div className="card-stats card">
                 <CardBody className="card-body">
-                  <p className="mt-3 mb-0 text-muted text-sm">
-                    {t("division")}
+                  <p className="text-muted text-sm">
+                    {t("location")}
                   </p>
                   <Select
                     isMulti
-                    options={(location?.divisions ?? []).map((s) => ({
-                      value: s.id,
-                      label: s.name,
-                    }))}
-                    value={selectedDivision}
-                    onChange={(options) =>
-                      handleSelectChange("division", options)
-                    }
+                    options={optionList}
+                    value={selectedTypeData}
+                    onChange={(options) => handleSelectChange(options)}
                   />
                 </CardBody>
-              </div>
-            </div>
-            <div className="col-lg-6 col-xl-3">
-              <div className="card-stats mb-4 mb-xl-0 card">
-                <div className="card-body">
-                  <p className="mt-3 mb-0 text-muted text-sm">{t("station")}</p>
-                  <Select
-                    isMulti
-                    options={(location?.stations ?? []).map((s) => ({
-                      value: s.station_code,
-                      label: s.station_name
-                    }))}
-                    value={selectedStation}
-                    onChange={(options) =>
-                      handleSelectChange("station", options)
-                    }
-                  />
-                </div>
               </div>
             </div>
           </div>
