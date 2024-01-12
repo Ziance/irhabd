@@ -24,7 +24,7 @@ const CompatibilityScreen = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const compatibility = useSelector(selectCompatibility);
-  const [userInput, setUserInput] = useState(10);
+  const [userInput, setUserInput] = useState(30);
   const [urlInput, setUrlInput] = useState(null);
   const [currentIframeIndex, setCurrentIframeIndex] = useState(0);
   const [selectedCompatibilityList, setSelectedCompatibilityList] = useState(
@@ -133,7 +133,6 @@ const CompatibilityScreen = () => {
                     <Input
                       type="number"
                       id="durationInput"
-                      defaultValue={10}
                       value={userInput}
                       onChange={handleInputChange}
                       min={10}

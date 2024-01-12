@@ -1,9 +1,8 @@
 // Login.js
-import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { loginUser } from "../redux/slices/userSlice";
-import { login } from "../services/userService";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, Navigate } from "react-router-dom";
+import { userLogin, selectUser } from "../redux/slices/userSlice";
 import {
   Container,
   Row,
@@ -18,7 +17,7 @@ import {
   InputGroup,
 } from "reactstrap";
 import { toast } from "react-toastify";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
   const { t } = useTranslation();
@@ -28,41 +27,35 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const isAuthenticated = !!localStorage.getItem("user");
+  const data = useSelector(selectUser);
 
-  useEffect(() => {
-    const navigateToScreen = async () => {
-      if (isAuthenticated) {
-        await navigate("/");
-      }
-    };
-
-    navigateToScreen();
-  }, [isAuthenticated]);
-
-  const handleLogin = useCallback(async () => {
+  const handleLogin = async () => {
+    setLoading(true);
     const validationErrors = {};
-    if (!username.trim()) validationErrors.username = t('usernameIsRequired');
-
-    if (!password.trim()) validationErrors.password = t('passwordIsRequired');
-
-    // If there are validation errors, update the state and return
+    if (!username.trim()) validationErrors.username = t("usernameIsRequired");
+    if (!password.trim()) validationErrors.password = t("passwordIsRequired");
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      setLoading(false);
       return;
+    } else {
+      setErrors({});
+      try {
+        const credentials = { username, password };
+        await dispatch(userLogin(credentials));
+        toast.success("Logged in successfully.");
+        window.location.href = "/";
+      } catch (error) {
+        toast.error(
+          error?.response?.data || error?.message || t("loginFailed")
+        );
+      } finally {
+        setLoading(false);
+      }
     }
-
-    setErrors({});
-    try {
-      const credentials = { username, password };
-      const user = await login(credentials);
-      dispatch(loginUser(user));
-      navigate("/");
-      toast.success("Logged in successfully.");
-    } catch (error) {
-      toast.error(error?.response?.data || error?.message || t('loginFailed'));
-    }
-  }, [dispatch, login, navigate, password, toast, username]);
+  };
 
   const handleInputChange = (key, value) => {
     setErrors({});
@@ -85,8 +78,8 @@ const Login = () => {
             <div className="header-body text-center mb-7">
               <Row className="justify-content-center row">
                 <Col lg="5" md="6">
-                  <h1 className="text-white">{t('welcome!')}</h1>
-                  <p className="text-lead text-light">{t('signInHere')}</p>
+                  <h1 className="text-white">{t("welcome!")}</h1>
+                  <p className="text-lead text-light">{t("signInHere")}</p>
                 </Col>
               </Row>
             </div>
@@ -124,6 +117,7 @@ const Login = () => {
                         <Input
                           placeholder="Username"
                           type="text"
+                          autoComplete="username"
                           onChange={(e) =>
                             handleInputChange("username", e.target.value)
                           }
@@ -160,7 +154,7 @@ const Login = () => {
                         type="button"
                         onClick={handleLogin}
                       >
-                        {t('signIn')}
+                        {t("signIn")}
                       </Button>
                     </div>
                   </Form>
@@ -173,7 +167,7 @@ const Login = () => {
                     href="#pablo"
                     onClick={(e) => e.preventDefault()}
                   >
-                    <small>{t('forgotPassword?')}</small>
+                    <small>{t("forgotPassword?")}</small>
                   </a>
                 </Col>
               </Row>
