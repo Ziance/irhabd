@@ -24,8 +24,7 @@ const CompatibilityScreen = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const compatibility = useSelector(selectCompatibility);
-  const [remainingTime, setRemainingTime] = useState(10);
-  const [userInput, setUserInput] = useState(null);
+  const [userInput, setUserInput] = useState(10);
   const [urlInput, setUrlInput] = useState(null);
   const [currentIframeIndex, setCurrentIframeIndex] = useState(0);
   const [selectedCompatibilityList, setSelectedCompatibilityList] = useState(
@@ -36,7 +35,6 @@ const CompatibilityScreen = () => {
   ]);
   const [errors, setErrors] = useState({});
   const [isIqnetSelected, setIsIqnetSelected] = useState(false);
-  const [isOkayClicked, setIsOkayClicked] = useState(false);
   const [compatibilityList, setCompatibilityList] = useState([]);
 
   useEffect(() => {
@@ -60,24 +58,21 @@ const CompatibilityScreen = () => {
   }, [compatibility?.compatibility]);
 
   useEffect(() => {
-    if (selectedCompatibilityList.length > 0 && userInput >= 10) {
+    if (frameList.length > 1) {
       const interval = setInterval(() => {
-        setRemainingTime((prevTime) => {
-          if (prevTime === 1) {
-            const nextIndex = (currentIframeIndex + 1) % frameList.length;
-            setCurrentIframeIndex(nextIndex);
-            return remainingTime;
-          } else {
-            return prevTime - 1;
-          }
-        });
-      }, 1000);
+        if (currentIframeIndex + 1 === frameList.length) {
+          setCurrentIframeIndex(0);
+        } else {
+          const nextIndex = (currentIframeIndex + 1) % frameList.length;
+          setCurrentIframeIndex(nextIndex);
+        }
+      }, userInput * 1000);
+
       return () => clearInterval(interval);
     }
-  }, [selectedCompatibilityList, userInput, remainingTime]);
+  }, [frameList, currentIframeIndex]);
 
   const handleOkayClick = () => {
-    setRemainingTime(userInput);
     if (isIqnetSelected) {
       if (urlInput === null || urlInput === "") {
         const validationErrors = {};
@@ -103,14 +98,13 @@ const CompatibilityScreen = () => {
         ...selectedCompatibilityList,
       ]);
     }
-    setIsOkayClicked(true);
   };
 
   const handleInputChange = (e, isForURL = false) => {
     if (!isForURL) {
       const inputValue = parseInt(e.target.value, 10);
       if (!isNaN(inputValue) && inputValue >= 10) setUserInput(inputValue);
-      else setUserInput(0);
+      else setUserInput(10);
     } else {
       setUrlInput(e.target.value);
     }
@@ -124,7 +118,6 @@ const CompatibilityScreen = () => {
     setIsIqnetSelected(isIqnet);
   };
 
-  console.log("===============", frameList);
   return (
     <div className="main-contentview">
       <div className="header bg-gradient-info pb-8 pt-5 pt-md-4">
@@ -185,9 +178,6 @@ const CompatibilityScreen = () => {
                 <Button color="primary" onClick={handleOkayClick}>
                   {t("okay")}
                 </Button>
-                <div style={{ marginTop: "10px" }}>
-                  Remaining Time: {remainingTime} seconds
-                </div>
               </div>
             </div>
           </div>
