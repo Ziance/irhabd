@@ -1,8 +1,8 @@
 // Login.js
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, Navigate } from "react-router-dom";
-import { userLogin, selectUser } from "../redux/slices/userSlice";
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { userLogin } from "../redux/slices/userSlice";
 import {
   Container,
   Row,
@@ -29,7 +29,10 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const isAuthenticated = !!localStorage.getItem("user");
-  const data = useSelector(selectUser);
+
+  useEffect(() => {
+    if (isAuthenticated) navigate("/");
+  }, [isAuthenticated]);
 
   const handleLogin = async () => {
     setLoading(true);
