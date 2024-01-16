@@ -20,6 +20,11 @@ import {
 } from "../redux/slices/compatibilitySlice";
 import DeviceReadings from "./deviceReadings";
 
+const compatibilityViewStyle = [
+  { label: "Iframe", value: "frame" },
+  { label: "Horizontal", value: "horizontal" },
+];
+
 const CompatibilityScreen = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -35,7 +40,11 @@ const CompatibilityScreen = () => {
   ]);
   const [errors, setErrors] = useState({});
   const [isIqnetSelected, setIsIqnetSelected] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const [compatibilityList, setCompatibilityList] = useState([]);
+  const [viewStyle, setViewStyle] = useState(compatibilityViewStyle[0]);
+  const [applyStyle, setApplyStyle] = useState("frame");
+  const [remainingTime, setRemainingTime] = useState(userInput);
 
   useEffect(() => {
     try {
@@ -58,21 +67,29 @@ const CompatibilityScreen = () => {
   }, [compatibility?.compatibility]);
 
   useEffect(() => {
-    if (frameList.length > 1) {
+    if (frameList.length > 1 && applyStyle === "frame") {
       const interval = setInterval(() => {
-        if (currentIframeIndex + 1 === frameList.length) {
-          setCurrentIframeIndex(0);
+        if (remainingTime === 0) {
+          setRemainingTime(userInput);
+          if (currentIframeIndex + 1 === frameList.length) {
+            setCurrentIframeIndex(0);
+          } else {
+            const nextIndex = (currentIframeIndex + 1) % frameList.length;
+            setCurrentIframeIndex(nextIndex);
+          }
         } else {
-          const nextIndex = (currentIframeIndex + 1) % frameList.length;
-          setCurrentIframeIndex(nextIndex);
+          setRemainingTime((prevTime) => prevTime - 1);
         }
-      }, userInput * 1000);
+      }, 1000);
 
       return () => clearInterval(interval);
     }
-  }, [frameList, currentIframeIndex]);
+  }, [frameList, currentIframeIndex, userInput, remainingTime]);
 
   const handleOkayClick = () => {
+    if (viewStyle.value !== applyStyle) setApplyStyle(viewStyle.value);
+    if (remainingTime !== userInput) setRemainingTime(userInput);
+
     if (isIqnetSelected) {
       if (urlInput === null || urlInput === "") {
         const validationErrors = {};
@@ -110,23 +127,60 @@ const CompatibilityScreen = () => {
     }
   };
 
-  const handleSelectChange = (selectedOptions) => {
-    setSelectedCompatibilityList(selectedOptions);
-    const isIqnet = selectedOptions.some(
-      (option) => option?.value.toLowerCase() === "iqnet"
-    );
-    setIsIqnetSelected(isIqnet);
+  const handleSelectChange = (key, selectedOptions) => {
+    switch (key) {
+      case "frame":
+        setSelectedCompatibilityList(selectedOptions);
+        const isIqnet = selectedOptions.some(
+          (option) => option?.value.toLowerCase() === "iqnet"
+        );
+        setIsIqnetSelected(isIqnet);
+        break;
+      case "viewStyle":
+        setViewStyle(selectedOptions);
+        break;
+      default:
+        console.log(key);
+        break;
+    }
+  };
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${String(minutes).padStart(2, "0")}:${String(
+      remainingSeconds
+    ).padStart(2, "0")}`;
   };
 
   return (
     <div className="main-contentview">
-      <div className="header bg-gradient-info pb-8 pt-5 pt-md-4">
+      <div className="header bg-gradient-info pb-7 pt-0">
         <div className="container-fluid">
           <div className="header-body">
-            <div className="row">
-              <div className="col-lg-6 col-xl-3">
-                <div className="card-stats mb-4 mb-xl-0 card">
-                  <CardBody>
+            <p
+              onClick={() => setShowForm(!showForm)}
+              className="text-white text-sm font-weight-bold text-underline cursor-pointer"
+            >
+              {showForm ? "Hide Form" : "Show Form"}
+            </p>
+            {showForm && (
+              <div className="row">
+                <div className="col-sm-2">
+                  <div className="card card-stats p-1 w-full">
+                    <p className="mb-0 text-muted text-sm">{t("viewStyle")}</p>
+                    <Select
+                      isMulti={false}
+                      options={compatibilityViewStyle}
+                      value={viewStyle}
+                      onChange={(options) =>
+                        handleSelectChange("viewStyle", options)
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="col-sm-2">
+                  <div className="card-stats card p-2 w-full">
                     <p className="mb-0 text-muted text-sm">
                       {t("setDurationSeconds")}
                     </p>
@@ -137,13 +191,12 @@ const CompatibilityScreen = () => {
                       onChange={handleInputChange}
                       min={10}
                       max={600}
+                      size="sm"
                     />
-                  </CardBody>
+                  </div>
                 </div>
-              </div>
-              <div className="col-lg-6 col-xl-3">
-                <div className="card-stats mb-4 mb-xl-0 card">
-                  <CardBody>
+                <div className="col-sm-2">
+                  <div className="card card-stats p-1 w-full">
                     <p className="mb-0 text-muted text-sm">
                       {t("selectFrame")}
                     </p>
@@ -151,15 +204,15 @@ const CompatibilityScreen = () => {
                       isMulti
                       options={compatibilityList}
                       value={selectedCompatibilityList}
-                      onChange={handleSelectChange}
+                      onChange={(options) =>
+                        handleSelectChange("frame", options)
+                      }
                     />
-                  </CardBody>
+                  </div>
                 </div>
-              </div>
-              {isIqnetSelected && (
-                <div className="col-lg-6 col-xl-3">
-                  <div className="card-stats mb-4 mb-xl-0 card">
-                    <CardBody>
+                {isIqnetSelected && (
+                  <div className="col-sm-2">
+                    <div className="card-stats card p-2 w-full">
                       <p className="mb-0 text-muted text-sm">{t("url")}</p>
                       <Input
                         type="text"
@@ -167,51 +220,67 @@ const CompatibilityScreen = () => {
                         value={urlInput}
                         onChange={(e) => handleInputChange(e, true)}
                         invalid={errors["url"] && errors["url"].length > 0}
+                        size="sm"
                       />
                       <div className="invalid-feedback">{errors.url}</div>
-                    </CardBody>
+                    </div>
                   </div>
+                )}
+                <div className="col-sm-2">
+                  <Button color="primary" onClick={handleOkayClick}>
+                    {t("okay")}
+                  </Button>
                 </div>
-              )}
-              <div className="col-lg-6 col-xl-3">
-                <Button color="primary" onClick={handleOkayClick}>
-                  {t("okay")}
-                </Button>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
-      <Container className="mt--7 " fluid>
-        <Row>
+      <Container className="mt--7" fluid>
+        <Row className="bg-white">
           {frameList.map((item, index) => {
-            console.log("currentIframeIndex", currentIframeIndex);
             return (
-              <Col sm="12" key={item.id}>
+              <Col
+                className="p-0 m-0"
+                sm={applyStyle === "horizontal" ? "6" : "12"}
+                key={item.id}
+              >
                 <Card
                   style={{
-                    display: index === currentIframeIndex ? "block" : "none",
+                    display:
+                      applyStyle === "frame"
+                        ? index === currentIframeIndex
+                          ? "block"
+                          : "none"
+                        : "block",
                   }}
                 >
                   <CardBody>
-                    <CardTitle tag="h5">{item.label}</CardTitle>
-                    {(item?.url && (
-                      <iframe
-                        title={`iframe-${item.id}`}
-                        src={item.url}
-                        width="100%"
-                        height="500px"
-                      ></iframe>
-                    )) || (
-                      <div
-                        className="container-fluid overflow-auto"
-                        style={{
-                          height: "500px",
-                        }}
-                      >
-                        <DeviceReadings showFromLeft={true} />
-                      </div>
-                    )}
+                    <div className="d-flex justify-content-between align-items-center">
+                      <CardTitle tag="h5" className="text-primary">
+                        {item.label}
+                      </CardTitle>
+                      {frameList.length > 1 && (
+                        <p className="text-right text-primary text-sm font-weight-bold">
+                          Remaining Time: {formatTime(remainingTime)} sec
+                        </p>
+                      )}
+                    </div>
+                    <div
+                      className="container-fluid overflow-auto w-full p-0"
+                      style={{
+                        height: "500px",
+                      }}
+                    >
+                      {(item?.url && (
+                        <iframe
+                          title={`iframe-${item.id}`}
+                          src={item.url}
+                          width="100%"
+                          height="100%"
+                        ></iframe>
+                      )) || <DeviceReadings showFromLeft={true} />}
+                    </div>
                   </CardBody>
                 </Card>
               </Col>

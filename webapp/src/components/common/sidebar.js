@@ -3,7 +3,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import { logoutUser } from "../../redux/slices/userSlice";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
@@ -39,20 +39,38 @@ const Sidebar = () => {
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav">
               <li className={`nav-item ${isLinkActive("/") && "active"}`}>
-                <a aria-current="page" className="nav-link" href="/">
-                  <i className="ni ni-pin-3 text-orange"></i>{t('mapView')}
-                </a>
-              </li>
-              
-              <li className={`nav-item ${isLinkActive("/compatibilityPage") && "active"}`}>
-                <a className="nav-link" href="/compatibilityPage">
-                  <i className="ni ni-tv-2 text-primary"></i>{t('compatibilty')}
+                <a className="nav-link" href="/">
+                  <i className="ni ni-app text-primary"></i>
+                  {t("deviceReadings")}
                 </a>
               </li>
 
-              <li className={`nav-item ${isLinkActive("/contactUs") && "active"}`}>
+              <li
+                className={`nav-item ${isLinkActive("/mapView") && "active"}`}
+              >
+                <a aria-current="page" className="nav-link" href="/mapView">
+                  <i className="ni ni-pin-3 text-orange"></i>
+                  {t("mapView")}
+                </a>
+              </li>
+
+              <li
+                className={`nav-item ${
+                  isLinkActive("/compatibilityPage") && "active"
+                }`}
+              >
+                <a className="nav-link" href="/compatibilityPage">
+                  <i className="ni ni-tv-2 text-primary"></i>
+                  {t("compatibilty")}
+                </a>
+              </li>
+
+              <li
+                className={`nav-item ${isLinkActive("/contactUs") && "active"}`}
+              >
                 <a className="nav-link" href="/contactUs">
-                  <i className="ni ni-mobile-button text-primary"></i>{t('contactUs')}
+                  <i className="ni ni-mobile-button text-primary"></i>
+                  {t("contactUs")}
                 </a>
               </li>
               {/* <li className={`nav-item ${isLinkActive("/alertSettings") && "active"}`}>
@@ -65,17 +83,13 @@ const Sidebar = () => {
                   <i className="ni ni-app text-primary"></i>{t('deviceStatus')}
                 </a>
               </li> */}
-              <li className={`nav-item ${isLinkActive("/deviceReadings") && "active"}`}>
-                <a className="nav-link" href="/deviceReadings">
-                  <i className="ni ni-app text-primary"></i>{t('deviceReadings')}
-                </a>
-              </li>
             </ul>
 
             <ul className="mb-md-3 navbar-nav">
               <li className="active-pro active nav-item">
                 <a className="nav-link" onClick={() => handleLogout()}>
-                  <i className="ni ni-user-run"></i>{t('logout')}
+                  <i className="ni ni-user-run"></i>
+                  {t("logout")}
                 </a>
               </li>
             </ul>

@@ -1,5 +1,5 @@
 // MapView.js
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Container, Row, Col } from "reactstrap";
 import LocationDropDown from "../components/common/locationDropDown";
 import { useDispatch, useSelector } from "react-redux";

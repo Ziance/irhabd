@@ -8293,6 +8293,10 @@ input, button, select, optgroup, textarea {
   .py-8 {
     padding-bottom: 8rem !important;
   }
+  .pb-7,
+  .py-7 {
+    padding-bottom: 7rem !important;
+  }
   .pl-8,
   .px-8 {
     padding-left: 8rem !important;
@@ -28744,6 +28748,11 @@ input, button, select, optgroup, textarea {
   .py-8 {
     padding-bottom: 8rem !important;
   }
+
+  .pb-7,
+  .py-7 {
+    padding-bottom: 7rem !important;
+  }
   
   .pl-8,
   .px-8 {
@@ -41418,6 +41427,22 @@ input, button, select, optgroup, textarea {
 .contact-us-card {
   min-height: 485px;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.custom-view-select {
+  height: 2rem !important;
+}
+
+/* .custom-view-select .react-select__control {
+  height: 100%;
+}
+
+.custom-view-select .react-select__input {
+  height: 100%;
+} */
   
   /*# sourceMappingURL=argon-dashboard-react.css.map */
   

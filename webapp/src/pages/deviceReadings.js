@@ -22,6 +22,7 @@ const DeviceReadings = ({ showFromLeft }) => {
   const [paginatedDataSetting, setPaginatedDataSettings] = useState(null);
   const [loading, setLoading] = useState(false);
   const [filterModalOpen, setFilterModalOpen] = useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
   const isAuthenticated = !!localStorage.getItem("user");
 
   useEffect(() => {
@@ -122,6 +123,84 @@ const DeviceReadings = ({ showFromLeft }) => {
     {}
   );
 
+  const downloadAllData = () => {
+    const allData = [];
+
+    // Iterate through each station's data
+    Object.values(groupedByStation).forEach((station) => {
+      const stationData = station || [];
+      allData.push(...stationData);
+    });
+
+    // Check if there's any data to download
+    if (allData.length === 0) {
+      alert("No data available to download.");
+      return;
+    }
+
+    // Include a title in the CSV file
+    const titleRow = Object.keys(allData[0]);
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      titleRow.join(",") +
+      "\n" +
+      allData
+        .map((row) =>
+          Object.values(row)
+            .map((value) => `"${value}"`)
+            .join(",")
+        )
+        .join("\n");
+
+    // Create a download link
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "allData.csv");
+
+    // Append the link to the document and trigger the download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const downloadSelectedData = () => {
+    const selectedData = [];
+  
+    // Iterate through each station's data
+    Object.values(groupedByStation).forEach((station) => {
+      const stationData = station || [];
+  
+      // Filter station data based on selected rows
+      const selectedStationData = stationData.filter(row => selectedRows.includes(row.id));
+  
+      // Add selected station data to the result
+      selectedData.push(...selectedStationData);
+    });
+  
+    // Check if there's any data to download
+    if (selectedData.length === 0) {
+      alert('No selected data available to download.');
+      return;
+    }
+  
+    // Include a title in the CSV file
+    const titleRow = Object.keys(selectedData[0]);
+    const csvContent = "data:text/csv;charset=utf-8," + titleRow.join(',') + '\n'
+      + selectedData.map(row => Object.values(row).map(value => `"${value}"`).join(',')).join('\n');
+  
+    // Create a download link
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'selectedData.csv');
+  
+    // Append the link to the document and trigger the download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const getPaginationDetails = (stationName) => {
     const paginationSettingsForStation =
       (paginatedDataSetting && paginatedDataSetting[stationName]) || {};
@@ -162,16 +241,21 @@ const DeviceReadings = ({ showFromLeft }) => {
 
               <div className="col-lg-4 col-xl-2">
                 <div className="card">
-                  <Button color="secondary" type="button" size="lg">
-                    {t("download")}
+                  <Button
+                    color="secondary"
+                    type="button"
+                    size="lg"
+                    onClick={downloadAllData}
+                  >
+                    {t("downloadAll")}
                   </Button>
                 </div>
               </div>
 
               <div className="col-lg-4 col-xl-2">
                 <div className="card">
-                  <Button color="secondary" type="button" size="lg">
-                    {t("upload")}
+                  <Button color="secondary" type="button" size="lg" onClick={downloadSelectedData}>
+                    {t("downloadSelected")}
                   </Button>
                 </div>
               </div>
@@ -205,7 +289,12 @@ const DeviceReadings = ({ showFromLeft }) => {
                                 overflow: "auto",
                               }}
                             >
-                              <DeviceReadingTable station={station} />
+                              <DeviceReadingTable
+                                station={station}
+                                getSelectedRows={(rows) =>
+                                  setSelectedRows(rows)
+                                }
+                              />
                             </div>
                             <PaginationComponent
                               station={station}

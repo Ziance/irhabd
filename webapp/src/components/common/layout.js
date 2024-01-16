@@ -15,7 +15,7 @@ const Layout = (props) => {
   let title = "";
   switch (route) {
     case "/":
-      title = t("mapView");
+      title = t("deviceReadings");
       break;
     case "/compatibilityPage":
       title = t("compatibilty");
@@ -29,8 +29,8 @@ const Layout = (props) => {
     case "/deviceStatus":
       title = t("deviceStatus");
       break;
-    case "/deviceReadings":
-      title = t("deviceReadings");
+    case "/mapView":
+      title = t("mapView");
       break;
     default:
       title = t("");

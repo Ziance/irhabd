@@ -33,7 +33,7 @@ const AppRouter = () => {
           path="/"
           element={
             <PrivateRoute
-              element={<MapView />}
+              element={<DeviceReadings />}
               isAuthenticated={isAuthenticated}
             />
           }
@@ -66,10 +66,10 @@ const AppRouter = () => {
           }
         />
          <Route
-          path="/deviceReadings"
+          path="/mapView"
           element={
             <PrivateRoute
-              element={<DeviceReadings />}
+              element={<MapView />}
               isAuthenticated={isAuthenticated}
             />
           }

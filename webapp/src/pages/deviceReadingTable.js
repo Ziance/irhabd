@@ -1,5 +1,5 @@
 // DeviceReadingTable.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
@@ -163,12 +163,22 @@ const CoachTable = () => {
 };
 
 const DeviceReadingTable = (props) => {
-  const { station } = props;
+  const { station, getSelectedRows } = props;
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const selectorData = useSelector(selectDeviceReadings);
   const [isCoachDataShow, setIsCoachDataShow] = useState(false);
   const [selectedRow, setSelectedRow] = useState({});
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+
+  useEffect(() => {
+    const allRowIds = station.map((rowData) => rowData.id);
+    const isAllSelected =
+      selectedRows.length === allRowIds.length &&
+      allRowIds.every((id) => selectedRows.includes(id));
+    setSelectAll(isAllSelected);
+  }, [selectedRows, station]);
 
   const handleIconClick = (data) => {
     const { id } = data;
@@ -189,6 +199,26 @@ const DeviceReadingTable = (props) => {
     }
   };
 
+  const handleCheckboxChange = (rowData) => {
+    const updatedSelectedRows = selectedRows.includes(rowData.id)
+      ? selectedRows.filter((id) => id !== rowData.id)
+      : [...selectedRows, rowData.id];
+
+    setSelectedRows(updatedSelectedRows);
+    getSelectedRows && getSelectedRows(updatedSelectedRows);
+  };
+
+  const handleSelectAllChange = () => {
+    if (selectAll) {
+      setSelectedRows([]);
+    } else {
+      const allRowIds = station.map((rowData) => rowData.id);
+      setSelectedRows(allRowIds);
+    }
+
+    setSelectAll(!selectAll);
+  };
+
   return (
     <Table striped>
       <thead>
@@ -201,6 +231,14 @@ const DeviceReadingTable = (props) => {
           </th>
         </tr>
         <tr>
+          <th>
+            <input
+              type="checkbox"
+              checked={selectAll}
+              onChange={handleSelectAllChange}
+            />
+          </th>
+          <th></th>
           <th>{t("deviceId")}</th>
           <th>{t("time")}</th>
           <th>{t("trainDir")}</th>
@@ -221,6 +259,13 @@ const DeviceReadingTable = (props) => {
           station.map((rowData) => (
             <>
               <tr key={rowData.id}>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={selectedRows.includes(rowData.id)}
+                    onChange={() => handleCheckboxChange(rowData)}
+                  />
+                </td>
                 <td>
                   <i
                     className={`text-primary ni ni-bold-${

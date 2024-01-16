@@ -38,6 +38,8 @@
   "deviceReadings": "Device Reading",
   "filter": "Filter",
   "download": "Dowload",
+  "downloadAll": "Dowload All",
+  "downloadSelected": "Dowload Selected",
   "upload": "Upload",
   "station": "Station",
   "deviceId": "Device Id",
@@ -59,5 +61,6 @@
   "coaches": "Coaches",
   "type": "Type",
   "locationType": "Location Type",
-  "location": "Location"
+  "location": "Location",
+  "viewStyle": "View Style"
 }
