@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import { logoutUser } from "../../redux/slices/userSlice";
 import { useTranslation } from "react-i18next";
+import LogoImage from "../../assets/images/autolite_logo.jpg";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
@@ -30,10 +31,10 @@ const Sidebar = () => {
         <div className="container-fluid">
           <a className="pt-0 navbar-brand" href="/">
             <img
-              alt="..."
-              className="navbar-brand-img"
-              src="https://png.pngtree.com/element_our/png/20180918/simple-v-logo-design-png_100141.jpg"
-              style={{ width: "100%" }}
+              alt="logo"
+              src={LogoImage}
+              className="navbar-brand-img img-fluid"
+              style={{ height: "100%", width: "100%" }}
             />
           </a>
           <div className="collapse navbar-collapse">

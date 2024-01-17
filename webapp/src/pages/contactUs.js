@@ -12,7 +12,7 @@ import {
   Row,
 } from "reactstrap";
 import { useTranslation } from "react-i18next";
-import ContactUsImage from "../assets/images/contactUs.jpg";
+import ContactUsImage from "../assets/images/Indian_Railways_logo.png";
 
 const ContactUs = () => {
   const { t } = useTranslation();
@@ -51,7 +51,7 @@ const ContactUs = () => {
               <Col sm={12} className="text-center mb-5">
                 <img
                   src={ContactUsImage}
-                  alt="Logo"
+                  alt="contact us"
                   className="img-fluid rounded-circle"
                   style={{ height: "11%", width: "11%" }}
                 />
@@ -60,12 +60,13 @@ const ContactUs = () => {
                 sm={12}
                 className="d-flex align-items-center justify-content-center text-center"
               >
-                <ListGroup flush className="col-7 w-full h-full border rounded py-3">
+                <ListGroup
+                  flush
+                  className="col-7 w-full h-full border rounded py-3"
+                >
                   <ListGroupItem className="border-0 text-sm py-2 d-flex">
                     <div className="col-3 text-left">
-                      <strong className="text-muted">
-                        {t("email")}:
-                      </strong>
+                      <strong className="text-muted">{t("email")}:</strong>
                     </div>
                     <div className="col-9 text-left">
                       <a href={mailTo} className="ml-3 text-underline">
@@ -76,9 +77,7 @@ const ContactUs = () => {
 
                   <ListGroupItem className="border-0 text-sm py-2 d-flex">
                     <div className="col-3 text-left">
-                      <strong className="text-muted">
-                        {t("address")}:
-                      </strong>
+                      <strong className="text-muted">{t("address")}:</strong>
                     </div>
                     <div className="col-9 text-left d-flex">
                       <a
