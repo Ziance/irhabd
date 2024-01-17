@@ -39,57 +39,91 @@ const Sidebar = () => {
           </a>
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav">
-              <li className={`nav-item ${isLinkActive("/") && "active"}`}>
-                <a className="nav-link" href="/">
-                  <i className="ni ni-app text-primary"></i>
+              <li
+                className={`nav-item ${isLinkActive("/") && "active bg-info"}`}
+              >
+                <a
+                  className={`nav-link font-weight-bold ${
+                    isLinkActive("/") && "text-white"
+                  }`}
+                  href="/"
+                >
+                  <i
+                    className={`ni ni-app text-primary ${
+                      isLinkActive("/") && "text-white"
+                    }`}
+                  ></i>
                   {t("deviceReadings")}
                 </a>
               </li>
 
               <li
-                className={`nav-item ${isLinkActive("/mapView") && "active"}`}
+                className={`nav-item ${
+                  isLinkActive("/mapView") && "active bg-info"
+                }`}
               >
-                <a aria-current="page" className="nav-link" href="/mapView">
-                  <i className="ni ni-pin-3 text-orange"></i>
+                <a
+                  aria-current="page"
+                  className={`nav-link font-weight-bold ${
+                    isLinkActive("/mapView") && "text-white"
+                  }`}
+                  href="/mapView"
+                >
+                  <i
+                    className={`ni ni-pin-3 text-primary ${
+                      isLinkActive("/mapView") && "text-white"
+                    }`}
+                  ></i>
                   {t("mapView")}
                 </a>
               </li>
 
               <li
                 className={`nav-item ${
-                  isLinkActive("/compatibilityPage") && "active"
+                  isLinkActive("/compatibilityPage") && "active bg-info"
                 }`}
               >
-                <a className="nav-link" href="/compatibilityPage">
-                  <i className="ni ni-tv-2 text-primary"></i>
+                <a
+                  className={`nav-link font-weight-bold ${
+                    isLinkActive("/compatibilityPage") && "text-white"
+                  }`}
+                  href="/compatibilityPage"
+                >
+                  <i
+                    className={`ni ni-tv-2 text-primary ${
+                      isLinkActive("/compatibilityPage") && "text-white"
+                    }`}
+                  ></i>
                   {t("compatibilty")}
                 </a>
               </li>
 
               <li
-                className={`nav-item ${isLinkActive("/contactUs") && "active"}`}
+                className={`nav-item ${
+                  isLinkActive("/contactUs") && "active bg-info"
+                }`}
               >
-                <a className="nav-link" href="/contactUs">
-                  <i className="ni ni-mobile-button text-primary"></i>
+                <a
+                  className={`nav-link font-weight-bold ${
+                    isLinkActive("/contactUs") && "text-white"
+                  }`}
+                  href="/contactUs"
+                >
+                  <i className={`ni ni-mobile-button text-primary ${
+                      isLinkActive("/contactUs") && "text-white"
+                    }`}></i>
                   {t("contactUs")}
                 </a>
               </li>
-              {/* <li className={`nav-item ${isLinkActive("/alertSettings") && "active"}`}>
-                <a className="nav-link" href="/alertSettings">
-                  <i className="ni ni-settings-gear-65 text-primary"></i>{t('alertSettings')}
-                </a>
-              </li> */}
-              {/* <li className={`nav-item ${isLinkActive("/deviceStatus") && "active"}`}>
-                <a className="nav-link" href="/deviceStatus">
-                  <i className="ni ni-app text-primary"></i>{t('deviceStatus')}
-                </a>
-              </li> */}
             </ul>
 
             <ul className="mb-md-3 navbar-nav">
-              <li className="active-pro active nav-item">
-                <a className="nav-link" onClick={() => handleLogout()}>
-                  <i className="ni ni-user-run"></i>
+              <li className="active-pro active nav-item bg-white">
+                <a
+                  className="nav-link font-weight-bold"
+                  onClick={() => handleLogout()}
+                >
+                  <i className="ni ni-user-run text-primary"></i>
                   {t("logout")}
                 </a>
               </li>
