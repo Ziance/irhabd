@@ -28,7 +28,7 @@ const LOCATION_TYPES = [
 ];
 
 const LocationDropDown = (props) => {
-  const { getSelectedData, getSelectedKey } = props;
+  const { getSelectedData, isShowHeaderBackground = true } = props;
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const location = useSelector(selectLocation);
@@ -87,17 +87,16 @@ const LocationDropDown = (props) => {
 
   const handleSelectChange = (options) => {
     setSelectedTypeData(options);
-    getSelectedData && getSelectedData(options);
-    getSelectedKey && getSelectedKey(selectedType.value);
+    getSelectedData && getSelectedData(selectedType.value, options);
   };
 
   return (
-    <div className="header bg-gradient-info pb-8 pt-5 pt-md-4">
+    <div className={`${isShowHeaderBackground && "header bg-gradient-info pb-8 pt-5 pt-md-4"}`}>
       <div className="container-fluid">
         <div className="header-body">
           <div className="row">
-            <div className="col-lg-6 col-xl-3">
-              <div className="card-stats card">
+            <div className="col-lg-6 col-xl-6">
+              <div className={`card-stats card ${!isShowHeaderBackground ? "border-0" : ''}`}>
                 <CardBody>
                   <p className="text-muted text-sm">
                     {t("locationType")}
@@ -106,14 +105,16 @@ const LocationDropDown = (props) => {
                     isMulti={false}
                     options={LOCATION_TYPES}
                     value={selectedType}
-                    onChange={(option) => setSelectedType(option)}
+                    onChange={(option) => {
+                      setSelectedType(option);
+                      setSelectedTypeData([]);
+                    }}
                   />
                 </CardBody>
               </div>
             </div>
-
-            <div className="col-lg-6 col-xl-3">
-              <div className="card-stats card">
+            <div className="col-lg-6 col-xl-6">
+              <div className={`card-stats card ${!isShowHeaderBackground ? "border-0" : ""}`}>
                 <CardBody className="card-body">
                   <p className="text-muted text-sm">
                     {t("location")}

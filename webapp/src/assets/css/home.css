@@ -41432,18 +41432,17 @@ input, button, select, optgroup, textarea {
   cursor: pointer;
 }
 
-.custom-view-select {
-  height: 2rem !important;
+.custom-range-slider {
+  height: 3px;
 }
 
-/* .custom-view-select .react-select__control {
-  height: 100%;
+.range-slider .range-slider__thumb {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: #2196f3;
 }
-
-.custom-view-select .react-select__input {
-  height: 100%;
-} */
-  
-  /*# sourceMappingURL=argon-dashboard-react.css.map */
-  
-  

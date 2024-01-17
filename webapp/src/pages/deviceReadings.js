@@ -1,7 +1,19 @@
 // DeviceReadings.js
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Card, CardBody, Col, Container, Row, Modal } from "reactstrap";
+import {
+  Button,
+  Card,
+  CardBody,
+  Col,
+  Container,
+  Row,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Input,
+} from "reactstrap";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -11,7 +23,7 @@ import {
 import { toast } from "react-toastify";
 import DeviceReadingTable from "./deviceReadingTable";
 import PaginationComponent from "./paginationComponent";
-import DeviceReadingModal from "./deviceReadingModal";
+import DeviceReadingFilterModal from "./deviceReadingFilterModal";
 
 const DeviceReadings = ({ showFromLeft }) => {
   const dispatch = useDispatch();
@@ -28,12 +40,7 @@ const DeviceReadings = ({ showFromLeft }) => {
   useEffect(() => {
     setLoading(true);
     try {
-      dispatch(
-        fetchDeviceReadings({
-          is_test: false,
-          hot_axle: false,
-        })
-      );
+      dispatch(fetchDeviceReadings());
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -231,17 +238,27 @@ const DeviceReadings = ({ showFromLeft }) => {
     return groupedByStation[stationName].slice(startIndex, endIndex);
   });
 
-  const closeFilterModal = () => setFilterModalOpen(false);
-
-  const handleSelectedRowsChange = (rows) => {
-    setSelectedRows(rows);
-  };
+  const handleSelectedRowsChange = (rows) => setSelectedRows(rows);
 
   const handleSelectAllChange = (selectAll, allRowIds) => {
-    if (selectAll) {
-      setSelectedRows(allRowIds);
-    } else {
-      setSelectedRows([]);
+    if (selectAll) setSelectedRows(allRowIds);
+    else setSelectedRows([]);
+  };
+
+  const handleFilterApply = (paramObj) => {
+    if (paramObj) {
+      setLoading(true);
+      try {
+        dispatch(fetchDeviceReadings(paramObj));
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        toast.error(
+          error?.response?.data || error?.message || "Data fetch failed."
+        );
+      } finally {
+        setFilterModalOpen(false)
+      }
     }
   };
 
@@ -254,9 +271,9 @@ const DeviceReadings = ({ showFromLeft }) => {
         <div className="container-fluid">
           <div className="header-body">
             <div className="row">
-              <div className="col-lg-4 col-xl-2">
+              <div className="col-lg-4 col-md-4 col-xl-2">
                 <div className="card">
-                  <Button color="secondary" type="button" size="lg">
+                  <Button color="secondary" type="button" size="lg" onClick={() => setFilterModalOpen(true)}>
                     {t("filter")}
                   </Button>
                 </div>
@@ -342,9 +359,10 @@ const DeviceReadings = ({ showFromLeft }) => {
           </Col>
         </Row>
       </Container>
-      <DeviceReadingModal
-        open={filterModalOpen}
-        closeModal={closeFilterModal}
+      <DeviceReadingFilterModal
+        isModalOpen={filterModalOpen}
+        toggleHandler={() => setFilterModalOpen(!filterModalOpen)}
+        handleFilterApply={(obj) => handleFilterApply(obj)}
       />
     </div>
   );

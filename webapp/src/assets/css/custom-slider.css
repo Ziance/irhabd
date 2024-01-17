@@ -1,0 +1,14 @@
+.form {
+  margin: 0 auto;
+  padding: 100px 30px 0;
+}
+
+.input-range {
+  margin-bottom: 160px;
+}
+
+@media (min-width: 800px) {
+  .form {
+    max-width: 60%;
+  }
+}

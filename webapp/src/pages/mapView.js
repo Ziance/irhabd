@@ -46,8 +46,10 @@ const MapView = () => {
   return (
     <div className="main-contentview">
       <LocationDropDown
-        getSelectedData={(options) => setSelectedData(options)}
-        getSelectedKey={(key) => setSelectedType(key)}
+        getSelectedData={(key, options) => {
+          setSelectedType(key)
+          setSelectedData(options);
+        }}
       />
       <Container className="mt--7" fluid>
         <Row>
