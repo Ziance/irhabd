@@ -63,7 +63,15 @@ const MapView = () => {
                           lat: marker.latitude,
                           lng: marker.longitude,
                           title: marker.station,
-                          content: `<div class="info-window-content"><h2>${marker.station}</h2><p>Latitude: ${marker.latitude}</p><p>Longitude: ${marker.longitude}</p></div>`,
+                          content: `<div class="info-window-content text-sm">
+                          <h2>${marker.id}</h2>
+                          <p>Station: ${marker.station ?? "-"}</p>
+                          <p>Default Direction: ${marker.defaultDir ?? "-"}</p>
+                          <p>Alias: ${marker.alias ?? "-"}</p>
+                          <p>Latitude: ${marker.latitude ?? "-"}</p>
+                          <p>Longitude: ${marker.longitude ?? "-"}</p>
+                          <p>LC Gate: ${marker.lcGate ?? "-"}</p>
+                          <p>Rail(kms): ${marker.railKms ?? "-"}</p></div>`,
                         };
                       } else return;
                     })}
