@@ -134,7 +134,7 @@ const DeviceReadings = ({ showFromLeft }) => {
 
     // Check if there's any data to download
     if (allData.length === 0) {
-      alert("No data available to download.");
+      toast.error("No data available to download.");
       return;
     }
 
@@ -166,35 +166,46 @@ const DeviceReadings = ({ showFromLeft }) => {
 
   const downloadSelectedData = () => {
     const selectedData = [];
-  
+
     // Iterate through each station's data
     Object.values(groupedByStation).forEach((station) => {
       const stationData = station || [];
-  
+
       // Filter station data based on selected rows
-      const selectedStationData = stationData.filter(row => selectedRows.includes(row.id));
-  
+      const selectedStationData = stationData.filter((row) =>
+        selectedRows.includes(row.id)
+      );
+
       // Add selected station data to the result
       selectedData.push(...selectedStationData);
     });
-  
+
     // Check if there's any data to download
     if (selectedData.length === 0) {
-      alert('No selected data available to download.');
+      toast.error("No selected data available to download.");
       return;
     }
-  
+
     // Include a title in the CSV file
     const titleRow = Object.keys(selectedData[0]);
-    const csvContent = "data:text/csv;charset=utf-8," + titleRow.join(',') + '\n'
-      + selectedData.map(row => Object.values(row).map(value => `"${value}"`).join(',')).join('\n');
-  
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      titleRow.join(",") +
+      "\n" +
+      selectedData
+        .map((row) =>
+          Object.values(row)
+            .map((value) => `"${value}"`)
+            .join(",")
+        )
+        .join("\n");
+
     // Create a download link
     const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'selectedData.csv');
-  
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "selectedData.csv");
+
     // Append the link to the document and trigger the download
     document.body.appendChild(link);
     link.click();
@@ -221,6 +232,18 @@ const DeviceReadings = ({ showFromLeft }) => {
   });
 
   const closeFilterModal = () => setFilterModalOpen(false);
+
+  const handleSelectedRowsChange = (rows) => {
+    setSelectedRows(rows);
+  };
+
+  const handleSelectAllChange = (selectAll, allRowIds) => {
+    if (selectAll) {
+      setSelectedRows(allRowIds);
+    } else {
+      setSelectedRows([]);
+    }
+  };
 
   return (
     <div
@@ -254,7 +277,12 @@ const DeviceReadings = ({ showFromLeft }) => {
 
               <div className="col-lg-4 col-xl-2">
                 <div className="card">
-                  <Button color="secondary" type="button" size="lg" onClick={downloadSelectedData}>
+                  <Button
+                    color="secondary"
+                    type="button"
+                    size="lg"
+                    onClick={downloadSelectedData}
+                  >
                     {t("downloadSelected")}
                   </Button>
                 </div>
@@ -291,9 +319,9 @@ const DeviceReadings = ({ showFromLeft }) => {
                             >
                               <DeviceReadingTable
                                 station={station}
-                                getSelectedRows={(rows) =>
-                                  setSelectedRows(rows)
-                                }
+                                selectedRows={selectedRows}
+                                onSelectedRowsChange={handleSelectedRowsChange}
+                                onSelectAllChange={handleSelectAllChange}
                               />
                             </div>
                             <PaginationComponent

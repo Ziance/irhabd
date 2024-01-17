@@ -163,13 +163,12 @@ const CoachTable = () => {
 };
 
 const DeviceReadingTable = (props) => {
-  const { station, getSelectedRows } = props;
+  const { station, selectedRows, onSelectedRowsChange, onSelectAllChange } = props;
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const selectorData = useSelector(selectDeviceReadings);
   const [isCoachDataShow, setIsCoachDataShow] = useState(false);
   const [selectedRow, setSelectedRow] = useState({});
-  const [selectedRows, setSelectedRows] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
 
   useEffect(() => {
@@ -204,19 +203,17 @@ const DeviceReadingTable = (props) => {
       ? selectedRows.filter((id) => id !== rowData.id)
       : [...selectedRows, rowData.id];
 
-    setSelectedRows(updatedSelectedRows);
-    getSelectedRows && getSelectedRows(updatedSelectedRows);
+    onSelectedRowsChange(updatedSelectedRows);
   };
 
   const handleSelectAllChange = () => {
-    if (selectAll) {
-      setSelectedRows([]);
-    } else {
-      const allRowIds = station.map((rowData) => rowData.id);
-      setSelectedRows(allRowIds);
-    }
+    const allRowIds = station.map((rowData) => rowData.id); 
 
-    setSelectAll(!selectAll);
+    const isAllSelected =
+      selectedRows.length === allRowIds.length &&
+      allRowIds.every((id) => selectedRows.includes(id));
+
+    onSelectAllChange(!isAllSelected, allRowIds);
   };
 
   return (
