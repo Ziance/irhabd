@@ -1,5 +1,5 @@
 // Layout.js
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/slices/userSlice";
 import Sidebar from "./sidebar";
@@ -9,6 +9,8 @@ import { useTranslation } from "react-i18next";
 
 const Layout = (props) => {
   const { children } = props;
+
+  const [collapsed, setCollapsed] = useState(true);
   const { t } = useTranslation();
   const user = useSelector(selectUser);
   const route = window.location.pathname;
@@ -39,9 +41,23 @@ const Layout = (props) => {
     <>
       {user ? (
         <>
-          <Header user={user} currentScreenTitle={title} />
-          <Sidebar />
-          <main>{children}</main>
+          <Sidebar collapsed={collapsed} />
+          <main
+            className={` ${
+              !collapsed ? "mainContainer_collapsed" : "mainContainer"
+            }`}
+            style={{
+              transition: "all .2s linear",
+            }}
+          >
+            <Header
+              user={user}
+              currentScreenTitle={title}
+              setCollapsed={setCollapsed}
+              collapsed={collapsed}
+            />
+            {children}
+          </main>
           <Footer />
         </>
       ) : (

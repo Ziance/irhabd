@@ -1,6 +1,6 @@
 // Footer.js
 import React from "react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -8,8 +8,8 @@ const Footer = () => {
     <footer>
       <div className="main-contentview">
         <div className="container-fluid">
-          <footer className="footer">
-            <div className="align-items-center justify-content-xl-between row">
+          <footer className="footer bg-danger">
+            <div className="align-items-center justify-content-xl-between row ">
               <div className="col-xl-6">
                 <div className="copyright text-center text-xl-left text-muted">
                   © 2024{" "}
@@ -18,7 +18,7 @@ const Footer = () => {
                     rel="noopener noreferrer"
                     target="_blank"
                   >
-                    {t('IRHBD')}
+                    {t("IRHBD")}
                   </a>
                 </div>
               </div>

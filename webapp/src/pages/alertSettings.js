@@ -1,21 +1,11 @@
 // AlertSettings.js
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardBody,
-  CardText,
-  CardTitle,
-  Col,
-  Container,
-  ListGroup,
-  ListGroupItem,
-  Row,
-} from "reactstrap";
-import { useTranslation } from "react-i18next";
+import { Card, CardBody, Col, Container, Row } from "reactstrap";
+// import { useTranslation } from "react-i18next";
 
 const AlertSettings = () => {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const mainContent = React.useRef(null);
   const navigate = useNavigate();
   const isAuthenticated = !!localStorage.getItem("user");
@@ -37,9 +27,7 @@ const AlertSettings = () => {
         <Row>
           <Col>
             <Card sm="12" className="contact-us-card shadow border-0">
-              <CardBody>
-               
-              </CardBody>
+              <CardBody></CardBody>
             </Card>
           </Col>
         </Row>

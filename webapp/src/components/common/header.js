@@ -1,20 +1,34 @@
 // Header.js
-import React from "react";
-import { Container } from "reactstrap";
+import React, { useState } from "react";
+import {
+  Collapse,
+  Container,
+  Nav,
+  NavItem,
+  NavLink,
+  Navbar,
+  NavbarBrand,
+  NavbarToggler,
+} from "reactstrap";
 import { useTranslation } from "react-i18next";
 
 const Header = (props) => {
-  const { user, currentScreenTitle } = props;
+  const { user, currentScreenTitle, setCollapsed, collapsed } = props;
   const { t } = useTranslation();
 
+  const toggleNavbar = () => setCollapsed(!collapsed);
   return (
-    <div className="main-contentview">
+    <div className="main-contentview " style={{ width: "100%" }}>
       <nav
         id="navbar-main"
         className="navbar-top navbar-dark navbar bg-gradient-info"
         expand="md"
       >
         <Container fluid>
+          <i
+            className="ni ni-left-2 btn btn-primary "
+            onClick={toggleNavbar}
+          ></i>
           <a
             className="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block"
             href={window.location.pathname}

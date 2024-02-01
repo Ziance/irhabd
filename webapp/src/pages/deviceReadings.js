@@ -1,19 +1,7 @@
 // DeviceReadings.js
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Button,
-  Card,
-  CardBody,
-  Col,
-  Container,
-  Row,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Input,
-} from "reactstrap";
+import { Button, Card, CardBody, Col, Container, Row } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -257,7 +245,7 @@ const DeviceReadings = ({ showFromLeft }) => {
           error?.response?.data || error?.message || "Data fetch failed."
         );
       } finally {
-        setFilterModalOpen(false)
+        setFilterModalOpen(false);
       }
     }
   };
@@ -265,6 +253,7 @@ const DeviceReadings = ({ showFromLeft }) => {
   return (
     <div
       className={`${(showFromLeft && "main-content") || "main-contentview"}`}
+      // style={{ backgroundColor: "red", width: "100%" }}
       ref={mainContent}
     >
       <div className="header bg-gradient-info pb-8 pt-5 pt-md-4">
@@ -273,7 +262,12 @@ const DeviceReadings = ({ showFromLeft }) => {
             <div className="row">
               <div className="col-lg-4 col-md-4 col-xl-2">
                 <div className="card">
-                  <Button color="secondary" type="button" size="lg" onClick={() => setFilterModalOpen(true)}>
+                  <Button
+                    color="secondary"
+                    type="button"
+                    size="lg"
+                    onClick={() => setFilterModalOpen(true)}
+                  >
                     {t("filter")}
                   </Button>
                 </div>
@@ -320,8 +314,10 @@ const DeviceReadings = ({ showFromLeft }) => {
                     {Object.keys(groupedByStation)?.length > 0 &&
                       paginatedData &&
                       paginatedData.map((station) => {
-                        const { rowsPerPage, currentPage } =
-                          getPaginationDetails(station[0]?.station);
+                        const {
+                          rowsPerPage,
+                          currentPage,
+                        } = getPaginationDetails(station[0]?.station);
                         return (
                           <>
                             <div
